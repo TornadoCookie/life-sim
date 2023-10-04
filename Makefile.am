@@ -13,4 +13,5 @@ liblife_a_SOURCES = \
     $(top_srcdir)/backend/interface/interface.cpp \
     $(top_srcdir)/backend/life/life.cpp \
     $(top_srcdir)/backend/names/name_generator.cpp \
-    $(top_srcdir)/backend/nations/nation_generator.cpp
+    $(top_srcdir)/backend/nations/nation_generator.cpp \
+    $(top_srcdir)/backend/school/life_education.cpp

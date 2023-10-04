@@ -59,7 +59,7 @@ void cv_menu(Interface *interface)
         std::cout << interface->GetCVBlurb() << std::endl;
 
         std::cout << "Your options: " << std::endl;
-        std::cout << "[" << (interface->IsInSchool() ? " " : "X") << "1] Drop out of school";
+        std::cout << "[" << (interface->GetEducationLevel() != EducationLevel::Uneducated ? " " : "X") << "1] Drop out of school";
         std::cout << std::endl;
         std::cout << "[X2] Educational development" << std::endl;
         std::cout << "[" << (interface->CanGoBackToUniversity() ? " " : "X") << "3] Go back to";

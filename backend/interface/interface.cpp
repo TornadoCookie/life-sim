@@ -61,7 +61,7 @@ YearLog Interface::GetLatestYearLog()
 
 std::string Interface::GetCV()
 {
-    return "To be Implemented";
+    return current_life->education.GenerateCV();
 }
 
 std::string Interface::GetCVBlurb()
@@ -69,9 +69,9 @@ std::string Interface::GetCVBlurb()
     return "You don't have any qualifications.";
 }
 
-bool Interface::IsInSchool()
+EducationLevel Interface::GetEducationLevel()
 {
-    return false;
+    return current_life->education.current_schooling;
 }
 
 bool Interface::CanGoBackToUniversity()

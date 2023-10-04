@@ -5,6 +5,15 @@
 #include <vector>
 #include <string>
 
+/* Level of education */
+enum class EducationLevel {
+    Uneducated,
+    Elementary,
+    Secondary,
+    College,
+    University
+};
+
 /* Life event that must be addressed before doing anything else. */
 class UrgentLifeEvent {
     public:
@@ -34,7 +43,7 @@ class Interface {
     YearLog GetLatestYearLog();
     std::string GetCV();
     std::string GetCVBlurb();
-    bool IsInSchool();
+    EducationLevel GetEducationLevel();
     bool CanGoBackToUniversity();
     void Dropout();
     void GoBackToUni();

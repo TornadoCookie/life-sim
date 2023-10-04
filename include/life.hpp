@@ -5,6 +5,7 @@
 #include "nations.hpp"
 #include "names.hpp"
 #include "events.hpp"
+#include "school.hpp"
 
 class LifeStats {
     public:
@@ -42,6 +43,7 @@ class Life {
     bool is_dead;
     LifeStats stats;
     LifeFinance finance;
+    LifeEducation education;
 };
 
 class PlayerLife : public Life {
