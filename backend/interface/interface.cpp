@@ -54,9 +54,7 @@ int Interface::GetBirthYear()
 
 YearLog Interface::GetLatestYearLog()
 {
-    std::cout << "log_size = " << year_logger->log.size() << std::endl;
-    YearLog log;
-    return log;
+    return year_logger->log[year_logger->log.size()-1];
 }
 
 std::string Interface::GetCV()

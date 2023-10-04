@@ -3,3 +3,4 @@ autom4te.cache
 build
 aclocal.m4
 Makefile.in
+configure~
