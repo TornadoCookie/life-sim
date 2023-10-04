@@ -1,0 +1,4 @@
+To install, run configure:
+    $ ./configure
+Then, run make:
+    $ make

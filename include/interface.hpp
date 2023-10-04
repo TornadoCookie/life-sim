@@ -1,0 +1,45 @@
+/* interface.hpp - Frontend-backend interface */
+#ifndef _LIFE_INTERFACE_
+#define _LIFE_INTERFACE_
+
+#include <vector>
+#include <string>
+
+/* Life event that must be addressed before doing anything else. */
+class UrgentLifeEvent {
+    public:
+    std::vector<std::string> options;
+    std::string title;
+    std::string content;
+    int default_option;
+};
+
+/* Log of the year */
+class YearLog {
+    public:
+    int year;
+    std::string content;
+};
+
+/* Main interface class between frontend and backend */
+class Interface {
+    public:
+    Interface();
+    void CallInterfaceFunction(int function, void *arg, void *result);
+    void StartRandomLife();
+    void AgeUp();
+    void RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent*));
+    std::vector<YearLog> GetYearLog();
+    int GetBirthYear();
+    YearLog GetLatestYearLog();
+    std::string GetCV();
+    std::string GetCVBlurb();
+    bool IsInSchool();
+    bool CanGoBackToUniversity();
+    void Dropout();
+    void GoBackToUni();
+    int GetAge();
+    int GetAgeAtYear(int year);
+};
+
+#endif /* _LIFE_INTERFACE_ */

@@ -1,0 +1,24 @@
+/* nations.hpp - Nationalities */
+#ifndef _NATION_
+#define _NATION_
+
+#include <vector>
+#include <string>
+
+class Nation {
+    public:
+    std::string name;
+    std::string demonym;
+    bool shouldHaveTheBefore;
+};
+
+class NationGenerator {
+    public:
+    NationGenerator();
+    Nation GetRandomNation();
+
+    private:
+    std::vector<Nation> loaded_nations;
+};
+
+#endif /* _NATION_ */
