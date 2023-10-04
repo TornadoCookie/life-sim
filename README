@@ -1,5 +1,8 @@
-Life-Sim - An expanadable InstLife clone
+Life-Sim - A portable InstLife clone written in C++.
 
-How it works:
-Code is written in C++.
+There are 2 parts: the frontend (frontend/) and the backend (backend/).
+The frontend has the code that actually display to the screen, and the backend has the code that
+simulates the life.
 
+The frontend and backend are designed to be completely independent of one-another, except for one
+link: the interface (backend/interface).
