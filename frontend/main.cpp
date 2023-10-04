@@ -146,7 +146,7 @@ int main()
 {
     Interface *interface = new Interface;
     UrgentLifeEvent *urgent_life_event;
-    bool aged_up;
+    bool aged_up = true;
     YearLog log;
     int option;
 
