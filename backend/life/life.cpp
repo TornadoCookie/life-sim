@@ -97,11 +97,13 @@ void PlayerLife::StartRandomLife()
 
 void age_up_life(Life *life)
 {
+    if (life->is_dead) return;
+    
     life->age++;
     if (life->age > 65)
         life->chance_of_dying++;
     if (rand() % 100 < life->chance_of_dying)
-        life->is_dead = true;
+        life->Die(CauseOfDeath::NaturalCauses);
 }
 
 void PlayerLife::AgeUp()
@@ -119,4 +121,17 @@ Life *PlayerLife::GetMother()
 Life *PlayerLife::GetFather()
 {
     return father;
+}
+
+void Life::Die(CauseOfDeath cause)
+{
+    is_dead = true;
+    cause_of_death = cause;
+}
+
+void PlayerLife::Die(CauseOfDeath cause)
+{
+    is_dead = true;
+    year_logger->AddToThisYearLog("I died.\n");
+    cause_of_death = cause;
 }

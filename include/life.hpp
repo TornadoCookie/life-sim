@@ -32,6 +32,11 @@ class LifeFinance {
     int annual_salary;
 };
 
+enum class CauseOfDeath {
+    NaturalCauses,
+    Suicide
+};
+
 class Life {
     public:
     std::string first_name;
@@ -44,6 +49,8 @@ class Life {
     LifeStats stats;
     LifeFinance finance;
     LifeEducation education;
+    CauseOfDeath cause_of_death;
+    void Die(CauseOfDeath cause);
 };
 
 class PlayerLife : public Life {
@@ -53,6 +60,7 @@ class PlayerLife : public Life {
     void AgeUp();
     Life *GetMother();
     Life *GetFather();
+    void Die(CauseOfDeath cause);
 
     private:
     NationGenerator *nation_generator;
