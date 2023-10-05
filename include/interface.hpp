@@ -20,7 +20,7 @@ class UrgentLifeEvent {
     std::vector<std::string> options;
     std::string title;
     std::string content;
-    int default_option;
+    unsigned long default_option;
 };
 
 /* Log of the year */

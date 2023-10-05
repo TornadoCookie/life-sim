@@ -17,7 +17,8 @@ int get_input(int default_option, int max_option)
 
 int handle_urgent_life_event(UrgentLifeEvent *urgent_life_event)
 {
-    int option, i;
+    unsigned long i;
+    int option;
 
     std::cout << "--" << urgent_life_event->title << "--" << std::endl;
     std::cout << urgent_life_event->content << std::endl;
@@ -25,7 +26,7 @@ int handle_urgent_life_event(UrgentLifeEvent *urgent_life_event)
 
     for (i = 0; i < urgent_life_event->options.size(); i++)
     {
-        std::cout << "[" << (urgent_life_event->default_option == i) ? "*" : " ";
+        std::cout << "[" << ((urgent_life_event->default_option == i) ? "*" : " ");
         std::cout << i+1 << "] " << urgent_life_event->options[i] << std::endl;
     }
     std::cout << "Your option: ";
@@ -42,7 +43,7 @@ void print_year_log(Interface *interface, YearLog log)
 void show_full_life_log(Interface *interface)
 {
     std::vector<YearLog> full_year_log = interface->GetYearLog();
-    int i;
+    unsigned long i;
 
     for (i = 0; i < full_year_log.size(); i++)
     {
@@ -145,7 +146,6 @@ void handle_main_menu_option(Interface *interface, int option, bool *aged_up)
 int main()
 {
     Interface *interface = new Interface;
-    UrgentLifeEvent *urgent_life_event;
     bool aged_up = true;
     YearLog log;
     int option;
