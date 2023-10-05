@@ -8,7 +8,7 @@ void YearLogger::SetStartingYear(int starting_year)
 
 void YearLogger::AddToYearLog(int year, std::string message)
 {
-    int index = year - starting_year;
+    unsigned long index = year - starting_year;
     YearLog year_log;
 
     if (log.size() < index + 1)
