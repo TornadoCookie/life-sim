@@ -23,6 +23,8 @@ void Interface::CallInterfaceFunction(int function, void *arg, void *result)
 
 void Interface::StartRandomLife()
 {
+    srand(time(NULL));
+
     current_year = rand() % 80 + 1970;
     year_logger->SetStartingYear(current_year);
     year_logger->SetCurrentYear(current_year);
