@@ -15,7 +15,7 @@ void PlayerLife::StartRandomLife()
     UrgentLifeEvent *birth_event = new UrgentLifeEvent;
 
     if (random_gender_number & 1) gender = Gender::Male;
-    else Gender::Female;
+    else gender = Gender::Female;
 
     nation = nation_generator->GetRandomNation();
 
@@ -37,7 +37,7 @@ void PlayerLife::StartRandomLife()
     if (mother->age <= 20) acceptable_range = 1;
     else if (mother->age <= 30) acceptable_range = 3;
     else if (mother->age <= 40) acceptable_range = 4;
-    else if (mother->age <= 50) acceptable_range = 5;
+    else acceptable_range = 5;
     /* Make father's age within acceptable_range years of mother's age */
     father->age = rand() % (acceptable_range << 1);
     father->age -= father->age >> 1;
