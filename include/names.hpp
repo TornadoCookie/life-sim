@@ -16,9 +16,7 @@ class NameGenerator {
     ~NameGenerator();
     std::string GetRandomFirstName(Nation nation, Gender gender);
     std::string GetRandomLastName(Nation nation, Gender gender);
-
-    private:
-    std::map<Gender, std::map<std::string, std::vector<std::string>>> name_lists;
+    bool can_use_cjk;
 };
 
 #endif /* _NAMES_ */

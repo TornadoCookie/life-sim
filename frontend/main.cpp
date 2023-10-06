@@ -155,6 +155,8 @@ int main()
     YearLog log;
     int option;
 
+    interface->SetCanUseCJK(false);
+
     interface->RegisterUrgentLifeEventCallback(handle_urgent_life_event);
     interface->RegisterLoadingScreenCallback(handle_loading_screen);
     interface->StartRandomLife();

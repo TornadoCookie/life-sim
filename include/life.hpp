@@ -62,6 +62,7 @@ class PlayerLife : public Life {
     Life *GetFather();
     void Die(CauseOfDeath cause);
     void RegisterLoadingScreenCallback(void(*callback)(int,int));
+    void SetCanUseCJK(bool can);
 
     private:
     NationGenerator *nation_generator;

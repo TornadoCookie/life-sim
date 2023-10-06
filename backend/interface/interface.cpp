@@ -103,3 +103,8 @@ void Interface::RegisterLoadingScreenCallback(void(*callback)(int,int))
 {
     current_life->RegisterLoadingScreenCallback(callback);
 }
+
+void Interface::SetCanUseCJK(bool can)
+{
+    current_life->SetCanUseCJK(can);
+}

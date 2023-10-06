@@ -50,6 +50,7 @@ class Interface {
     int GetAge();
     int GetAgeAtYear(int year);
     void RegisterLoadingScreenCallback(void(*callback)(int,int));
+    void SetCanUseCJK(bool can);
 };
 
 #endif /* _LIFE_INTERFACE_ */
