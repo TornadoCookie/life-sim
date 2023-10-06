@@ -1,6 +1,6 @@
 /* life.hpp - Main simulation of aging up */
 #ifndef _LIFE_
-#define _LIFE
+#define _LIFE_
 
 #include "nations.hpp"
 #include "names.hpp"
