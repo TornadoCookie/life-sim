@@ -31,16 +31,21 @@ void PlayerLife::StartRandomLife()
 
     nation = nation_generator->GetRandomNation();
 
+    loading_screen_callback(1, 4);
     first_name = name_generator->GetRandomFirstName(nation, gender);
+
+    loading_screen_callback(2, 4);
     last_name = name_generator->GetRandomLastName(nation, gender);
     age = 0;
 
+    loading_screen_callback(3, 4);
     mother = new Life;
     mother->first_name = name_generator->GetRandomFirstName(nation, Gender::Female);
     mother->last_name = last_name;
     mother->nation = nation;
     mother->age = rand() % 35 + 15; /* In range 15-50 */
 
+    loading_screen_callback(4, 4);
     father = new Life;
     father->first_name = name_generator->GetRandomFirstName(nation, Gender::Male);
     father->last_name = last_name;
@@ -115,4 +120,9 @@ void PlayerLife::Die(CauseOfDeath cause)
     is_dead = true;
     year_logger->AddToThisYearLog("I died.\n");
     cause_of_death = cause;
+}
+
+void PlayerLife::RegisterLoadingScreenCallback(void(*callback)(int,int))
+{
+    loading_screen_callback = callback;
 }

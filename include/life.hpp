@@ -61,6 +61,7 @@ class PlayerLife : public Life {
     Life *GetMother();
     Life *GetFather();
     void Die(CauseOfDeath cause);
+    void RegisterLoadingScreenCallback(void(*callback)(int,int));
 
     private:
     NationGenerator *nation_generator;
@@ -69,6 +70,7 @@ class PlayerLife : public Life {
     YearLogger *year_logger;
     Life *mother;
     Life *father;
+    void(*loading_screen_callback)(int,int);
 };
 
 #endif /* _LIFE_ */

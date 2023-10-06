@@ -49,6 +49,7 @@ class Interface {
     void GoBackToUni();
     int GetAge();
     int GetAgeAtYear(int year);
+    void RegisterLoadingScreenCallback(void(*callback)(int,int));
 };
 
 #endif /* _LIFE_INTERFACE_ */

@@ -143,6 +143,11 @@ void handle_main_menu_option(Interface *interface, int option, bool *aged_up)
     }
 }
 
+void handle_loading_screen(int now, int left)
+{
+    std::cout << "Loading... (" << now << "/" << left << ")" << std::endl;
+}
+
 int main()
 {
     Interface *interface = new Interface;
@@ -151,6 +156,7 @@ int main()
     int option;
 
     interface->RegisterUrgentLifeEventCallback(handle_urgent_life_event);
+    interface->RegisterLoadingScreenCallback(handle_loading_screen);
     interface->StartRandomLife();
 
     while (1)

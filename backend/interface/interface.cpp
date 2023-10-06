@@ -98,3 +98,8 @@ int Interface::GetAgeAtYear(int year)
 {
     return year - (current_year - current_life->age);
 }
+
+void Interface::RegisterLoadingScreenCallback(void(*callback)(int,int))
+{
+    current_life->RegisterLoadingScreenCallback(callback);
+}
