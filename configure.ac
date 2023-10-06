@@ -15,6 +15,7 @@ AC_PROG_RANLIB
 # Checks for libraries.
 
 # Checks for header files.
+AC_CHECK_HEADERS([curl/curl.h], [], [AC_MSG_ERROR([curl/curl.h not found.])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL

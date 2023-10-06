@@ -13,6 +13,7 @@ enum class Gender {
 class NameGenerator {
     public:
     NameGenerator();
+    ~NameGenerator();
     std::string GetRandomFirstName(Nation nation, Gender gender);
     std::string GetRandomLastName(Nation nation, Gender gender);
 

@@ -9,6 +9,7 @@ class Nation {
     public:
     std::string name;
     std::string demonym;
+    std::string api_name;
     bool shouldHaveTheBefore;
 };
 
