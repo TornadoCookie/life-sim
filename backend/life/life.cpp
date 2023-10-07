@@ -126,3 +126,8 @@ void PlayerLife::RegisterLoadingScreenCallback(void(*callback)(int,int))
 {
     loading_screen_callback = callback;
 }
+
+void PlayerLife::SetCanUseCJK(bool can)
+{
+    name_generator->can_use_cjk = can;
+}

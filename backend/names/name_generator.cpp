@@ -81,7 +81,7 @@ std::string romanize_text(std::string romanize, Nation nation)
     if (nation.api_name == "jp")
     {
         std::string url = "https://japonesbasico.com/furigana/procesa.php";
-        
+
         res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         if (res != CURLE_OK) return romanize_error(romanize, res);
 
@@ -122,6 +122,46 @@ std::string romanize_text(std::string romanize, Nation nation)
         /* Remove the extra space at the end */
         romanized_str[strlen(romanized_str)-1] = 0;
         std::string ret(romanized_str);
+
+        free(chunk.memory);
+
+        return ret;
+    }
+    else if (nation.api_name == "kr")
+    {
+        std::string url = "https://asaokitan.net/tools/hangul2yale/web.py";
+        
+        res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        if (res != CURLE_OK) return romanize_error(romanize, res);
+
+        std::string post_data_format = "hangul=%s";
+        std::string post_data = string_format(post_data_format, romanize.c_str());
+
+        res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
+        if (res != CURLE_OK) return romanize_error(romanize, res);
+
+        res = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, post_data.length());
+        if (res != CURLE_OK) return romanize_error(romanize, res);
+
+        res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+        if (res != CURLE_OK) return romanize_error(romanize, res);
+
+        res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+        if (res != CURLE_OK) return romanize_error(romanize, res);
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) return romanize_error(romanize, res);
+
+        chunk.memory[chunk.size - 1] = 0;
+
+        FILE *f = fopen("curl.log", "w");
+        fputs(chunk.memory, f);
+        fclose(f);
+
+        chunk.memory[0] = toupper(chunk.memory[0]);
+        strchr(chunk.memory, ' ')[1] = toupper(strchr(chunk.memory, ' ')[1]);
+
+        std::string ret(chunk.memory);
 
         free(chunk.memory);
 
