@@ -31,26 +31,27 @@ void PlayerLife::StartRandomLife()
 
     nation = nation_generator->GetRandomNation();
 
-    loading_screen_callback(1, 4);
+    loading_screen_callback(1, 5);
     first_name = name_generator->GetRandomFirstName(nation, gender);
 
-    loading_screen_callback(2, 4);
+    loading_screen_callback(2, 5);
     last_name = name_generator->GetRandomLastName(nation, gender);
     age = 0;
 
-    loading_screen_callback(3, 4);
+    loading_screen_callback(3, 5);
     mother = new Life;
     mother->first_name = name_generator->GetRandomFirstName(nation, Gender::Female);
     mother->last_name = last_name;
     mother->nation = nation;
     mother->age = rand() % 35 + 15; /* In range 15-50 */
 
-    loading_screen_callback(4, 4);
+    loading_screen_callback(4, 5);
     father = new Life;
     father->first_name = name_generator->GetRandomFirstName(nation, Gender::Male);
     father->last_name = last_name;
     father->nation = nation;
 
+    loading_screen_callback(5, 5);
     if (mother->age <= 20) acceptable_range = 1;
     else if (mother->age <= 30) acceptable_range = 3;
     else if (mother->age <= 40) acceptable_range = 4;

@@ -173,11 +173,18 @@ std::string romanize_text(std::string romanize, Nation nation)
     }
 }
 
+std::string loaded_full_name;
+bool used_up_first_name = true;
+bool used_up_last_name = true;
+
 std::string get_random_full_name(Nation nation, Gender gender, bool use_unicode)
 {
     CURL *name_curl;
     std::string url, gender_str, post_data;
     CURLcode res;
+
+    used_up_first_name = false;
+    used_up_last_name = false;
 
     struct MemoryStruct chunk;
     chunk.memory = (char *)malloc(1);
@@ -250,18 +257,32 @@ std::string get_random_full_name(Nation nation, Gender gender, bool use_unicode)
 
 std::string NameGenerator::GetRandomFirstName(Nation nation, Gender gender)
 {
-    std::string full_name = get_random_full_name(nation, gender, can_use_cjk);
+    std::string full_name = loaded_full_name;
+    if (used_up_first_name)
+    {
+        full_name = get_random_full_name(nation, gender, can_use_cjk);
+        loaded_full_name = full_name;
+    }   
     char *str = full_name.data();
 
     *strchr(str, ' ') = 0;
+
+    used_up_first_name = true;
 
     return std::string(str);
 }
 
 std::string NameGenerator::GetRandomLastName(Nation nation, Gender gender)
 {
-    std::string full_name = get_random_full_name(nation, gender, can_use_cjk);
+    std::string full_name = loaded_full_name;
+    if (used_up_last_name)
+    {
+        full_name = get_random_full_name(nation, gender, can_use_cjk);
+        loaded_full_name = full_name;
+    }
     char *str = strchr(full_name.data(), ' ') + 1;
+
+    used_up_last_name = true;
 
     return std::string(str);
 }
