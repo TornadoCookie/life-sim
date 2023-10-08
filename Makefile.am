@@ -2,18 +2,18 @@ bin_PROGRAMS = lifesim
 noinst_LIBRARIES = liblife.a 
 
 LDADD = $(noinst_LIBRARIES)
-AM_CPPFLAGS = -I$(top_srcdir)/include -g -Wall
+AM_CPPFLAGS = -I$(srcdir)/include -g -Wall
 
 lifesim_SOURCES = frontend/main.cpp
 lifesim_LDADD = $(LDADD) -lcurl
 
 liblife_a_SOURCES = \
-    $(top_srcdir)/backend/events/urgent_life_event.cpp \
-    $(top_srcdir)/backend/events/year_logger.cpp \
-    $(top_srcdir)/backend/interface/interface.cpp \
-    $(top_srcdir)/backend/life/life.cpp \
-    $(top_srcdir)/backend/names/name_generator.cpp \
-    $(top_srcdir)/backend/nations/nation_generator.cpp \
-    $(top_srcdir)/backend/school/life_education.cpp \
-    $(top_srcdir)/backend/network/network.cpp \
-    $(top_srcdir)/backend/jobs/jobs.cpp
+    $(srcdir)/backend/events/urgent_life_event.cpp \
+    $(srcdir)/backend/events/year_logger.cpp \
+    $(srcdir)/backend/interface/interface.cpp \
+    $(srcdir)/backend/life/life.cpp \
+    $(srcdir)/backend/names/name_generator.cpp \
+    $(srcdir)/backend/nations/nation_generator.cpp \
+    $(srcdir)/backend/school/life_education.cpp \
+    $(srcdir)/backend/network/network.cpp \
+    $(srcdir)/backend/jobs/jobs.cpp

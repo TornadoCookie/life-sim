@@ -87,6 +87,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+build_triplet = @build@
+host_triplet = @host@
 bin_PROGRAMS = lifesim$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -112,16 +114,14 @@ am__v_AR_1 =
 liblife_a_AR = $(AR) $(ARFLAGS)
 liblife_a_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_liblife_a_OBJECTS =  \
-	$(top_builddir)/backend/events/urgent_life_event.$(OBJEXT) \
-	$(top_builddir)/backend/events/year_logger.$(OBJEXT) \
-	$(top_builddir)/backend/interface/interface.$(OBJEXT) \
-	$(top_builddir)/backend/life/life.$(OBJEXT) \
-	$(top_builddir)/backend/names/name_generator.$(OBJEXT) \
-	$(top_builddir)/backend/nations/nation_generator.$(OBJEXT) \
-	$(top_builddir)/backend/school/life_education.$(OBJEXT) \
-	$(top_builddir)/backend/network/network.$(OBJEXT) \
-	$(top_builddir)/backend/jobs/jobs.$(OBJEXT)
+am_liblife_a_OBJECTS = backend/events/urgent_life_event.$(OBJEXT) \
+	backend/events/year_logger.$(OBJEXT) \
+	backend/interface/interface.$(OBJEXT) \
+	backend/life/life.$(OBJEXT) \
+	backend/names/name_generator.$(OBJEXT) \
+	backend/nations/nation_generator.$(OBJEXT) \
+	backend/school/life_education.$(OBJEXT) \
+	backend/network/network.$(OBJEXT) backend/jobs/jobs.$(OBJEXT)
 liblife_a_OBJECTS = $(am_liblife_a_OBJECTS)
 am_lifesim_OBJECTS = frontend/main.$(OBJEXT)
 lifesim_OBJECTS = $(am_lifesim_OBJECTS)
@@ -141,16 +141,14 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/tools/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade =  \
-	$(top_builddir)/backend/events/$(DEPDIR)/urgent_life_event.Po \
-	$(top_builddir)/backend/events/$(DEPDIR)/year_logger.Po \
-	$(top_builddir)/backend/interface/$(DEPDIR)/interface.Po \
-	$(top_builddir)/backend/jobs/$(DEPDIR)/jobs.Po \
-	$(top_builddir)/backend/life/$(DEPDIR)/life.Po \
-	$(top_builddir)/backend/names/$(DEPDIR)/name_generator.Po \
-	$(top_builddir)/backend/nations/$(DEPDIR)/nation_generator.Po \
-	$(top_builddir)/backend/network/$(DEPDIR)/network.Po \
-	$(top_builddir)/backend/school/$(DEPDIR)/life_education.Po \
+am__depfiles_remade = backend/events/$(DEPDIR)/urgent_life_event.Po \
+	backend/events/$(DEPDIR)/year_logger.Po \
+	backend/interface/$(DEPDIR)/interface.Po \
+	backend/jobs/$(DEPDIR)/jobs.Po backend/life/$(DEPDIR)/life.Po \
+	backend/names/$(DEPDIR)/name_generator.Po \
+	backend/nations/$(DEPDIR)/nation_generator.Po \
+	backend/network/$(DEPDIR)/network.Po \
+	backend/school/$(DEPDIR)/life_education.Po \
 	frontend/$(DEPDIR)/main.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -191,10 +189,13 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 AM_RECURSIVE_TARGETS = cscope
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/tools/depcomp \
+am__DIST_COMMON = $(srcdir)/Makefile.in \
+	$(top_srcdir)/tools/config.guess \
+	$(top_srcdir)/tools/config.sub $(top_srcdir)/tools/depcomp \
 	$(top_srcdir)/tools/install-sh $(top_srcdir)/tools/missing \
 	AUTHORS COPYING ChangeLog INSTALL NEWS README tools/compile \
-	tools/depcomp tools/install-sh tools/missing
+	tools/config.guess tools/config.sub tools/depcomp \
+	tools/install-sh tools/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -271,14 +272,22 @@ am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 bindir = @bindir@
+build = @build@
 build_alias = @build_alias@
+build_cpu = @build_cpu@
+build_os = @build_os@
+build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
+host = @host@
 host_alias = @host_alias@
+host_cpu = @host_cpu@
+host_os = @host_os@
+host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
@@ -305,19 +314,19 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = liblife.a 
 LDADD = $(noinst_LIBRARIES)
-AM_CPPFLAGS = -I$(top_srcdir)/include -g -Wall
+AM_CPPFLAGS = -I$(srcdir)/include -g -Wall
 lifesim_SOURCES = frontend/main.cpp
 lifesim_LDADD = $(LDADD) -lcurl
 liblife_a_SOURCES = \
-    $(top_srcdir)/backend/events/urgent_life_event.cpp \
-    $(top_srcdir)/backend/events/year_logger.cpp \
-    $(top_srcdir)/backend/interface/interface.cpp \
-    $(top_srcdir)/backend/life/life.cpp \
-    $(top_srcdir)/backend/names/name_generator.cpp \
-    $(top_srcdir)/backend/nations/nation_generator.cpp \
-    $(top_srcdir)/backend/school/life_education.cpp \
-    $(top_srcdir)/backend/network/network.cpp \
-    $(top_srcdir)/backend/jobs/jobs.cpp
+    $(srcdir)/backend/events/urgent_life_event.cpp \
+    $(srcdir)/backend/events/year_logger.cpp \
+    $(srcdir)/backend/interface/interface.cpp \
+    $(srcdir)/backend/life/life.cpp \
+    $(srcdir)/backend/names/name_generator.cpp \
+    $(srcdir)/backend/nations/nation_generator.cpp \
+    $(srcdir)/backend/school/life_education.cpp \
+    $(srcdir)/backend/network/network.cpp \
+    $(srcdir)/backend/jobs/jobs.cpp
 
 all: all-am
 
@@ -401,81 +410,76 @@ clean-binPROGRAMS:
 
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-$(top_builddir)/backend/events/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/events
-	@: > $(top_builddir)/backend/events/$(am__dirstamp)
-$(top_builddir)/backend/events/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/events/$(DEPDIR)
-	@: > $(top_builddir)/backend/events/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/events/urgent_life_event.$(OBJEXT):  \
-	$(top_builddir)/backend/events/$(am__dirstamp) \
-	$(top_builddir)/backend/events/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/events/year_logger.$(OBJEXT):  \
-	$(top_builddir)/backend/events/$(am__dirstamp) \
-	$(top_builddir)/backend/events/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/interface/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/interface
-	@: > $(top_builddir)/backend/interface/$(am__dirstamp)
-$(top_builddir)/backend/interface/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/interface/$(DEPDIR)
-	@: > $(top_builddir)/backend/interface/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/interface/interface.$(OBJEXT):  \
-	$(top_builddir)/backend/interface/$(am__dirstamp) \
-	$(top_builddir)/backend/interface/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/life/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/life
-	@: > $(top_builddir)/backend/life/$(am__dirstamp)
-$(top_builddir)/backend/life/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/life/$(DEPDIR)
-	@: > $(top_builddir)/backend/life/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/life/life.$(OBJEXT):  \
-	$(top_builddir)/backend/life/$(am__dirstamp) \
-	$(top_builddir)/backend/life/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/names/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/names
-	@: > $(top_builddir)/backend/names/$(am__dirstamp)
-$(top_builddir)/backend/names/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/names/$(DEPDIR)
-	@: > $(top_builddir)/backend/names/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/names/name_generator.$(OBJEXT):  \
-	$(top_builddir)/backend/names/$(am__dirstamp) \
-	$(top_builddir)/backend/names/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/nations/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/nations
-	@: > $(top_builddir)/backend/nations/$(am__dirstamp)
-$(top_builddir)/backend/nations/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/nations/$(DEPDIR)
-	@: > $(top_builddir)/backend/nations/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/nations/nation_generator.$(OBJEXT):  \
-	$(top_builddir)/backend/nations/$(am__dirstamp) \
-	$(top_builddir)/backend/nations/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/school/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/school
-	@: > $(top_builddir)/backend/school/$(am__dirstamp)
-$(top_builddir)/backend/school/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/school/$(DEPDIR)
-	@: > $(top_builddir)/backend/school/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/school/life_education.$(OBJEXT):  \
-	$(top_builddir)/backend/school/$(am__dirstamp) \
-	$(top_builddir)/backend/school/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/network/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/network
-	@: > $(top_builddir)/backend/network/$(am__dirstamp)
-$(top_builddir)/backend/network/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/network/$(DEPDIR)
-	@: > $(top_builddir)/backend/network/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/network/network.$(OBJEXT):  \
-	$(top_builddir)/backend/network/$(am__dirstamp) \
-	$(top_builddir)/backend/network/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/jobs/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/jobs
-	@: > $(top_builddir)/backend/jobs/$(am__dirstamp)
-$(top_builddir)/backend/jobs/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(top_builddir)/backend/jobs/$(DEPDIR)
-	@: > $(top_builddir)/backend/jobs/$(DEPDIR)/$(am__dirstamp)
-$(top_builddir)/backend/jobs/jobs.$(OBJEXT):  \
-	$(top_builddir)/backend/jobs/$(am__dirstamp) \
-	$(top_builddir)/backend/jobs/$(DEPDIR)/$(am__dirstamp)
+backend/events/$(am__dirstamp):
+	@$(MKDIR_P) backend/events
+	@: > backend/events/$(am__dirstamp)
+backend/events/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) backend/events/$(DEPDIR)
+	@: > backend/events/$(DEPDIR)/$(am__dirstamp)
+backend/events/urgent_life_event.$(OBJEXT):  \
+	backend/events/$(am__dirstamp) \
+	backend/events/$(DEPDIR)/$(am__dirstamp)
+backend/events/year_logger.$(OBJEXT): backend/events/$(am__dirstamp) \
+	backend/events/$(DEPDIR)/$(am__dirstamp)
+backend/interface/$(am__dirstamp):
+	@$(MKDIR_P) backend/interface
+	@: > backend/interface/$(am__dirstamp)
+backend/interface/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) backend/interface/$(DEPDIR)
+	@: > backend/interface/$(DEPDIR)/$(am__dirstamp)
+backend/interface/interface.$(OBJEXT):  \
+	backend/interface/$(am__dirstamp) \
+	backend/interface/$(DEPDIR)/$(am__dirstamp)
+backend/life/$(am__dirstamp):
+	@$(MKDIR_P) backend/life
+	@: > backend/life/$(am__dirstamp)
+backend/life/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) backend/life/$(DEPDIR)
+	@: > backend/life/$(DEPDIR)/$(am__dirstamp)
+backend/life/life.$(OBJEXT): backend/life/$(am__dirstamp) \
+	backend/life/$(DEPDIR)/$(am__dirstamp)
+backend/names/$(am__dirstamp):
+	@$(MKDIR_P) backend/names
+	@: > backend/names/$(am__dirstamp)
+backend/names/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) backend/names/$(DEPDIR)
+	@: > backend/names/$(DEPDIR)/$(am__dirstamp)
+backend/names/name_generator.$(OBJEXT): backend/names/$(am__dirstamp) \
+	backend/names/$(DEPDIR)/$(am__dirstamp)
+backend/nations/$(am__dirstamp):
+	@$(MKDIR_P) backend/nations
+	@: > backend/nations/$(am__dirstamp)
+backend/nations/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) backend/nations/$(DEPDIR)
+	@: > backend/nations/$(DEPDIR)/$(am__dirstamp)
+backend/nations/nation_generator.$(OBJEXT):  \
+	backend/nations/$(am__dirstamp) \
+	backend/nations/$(DEPDIR)/$(am__dirstamp)
+backend/school/$(am__dirstamp):
+	@$(MKDIR_P) backend/school
+	@: > backend/school/$(am__dirstamp)
+backend/school/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) backend/school/$(DEPDIR)
+	@: > backend/school/$(DEPDIR)/$(am__dirstamp)
+backend/school/life_education.$(OBJEXT):  \
+	backend/school/$(am__dirstamp) \
+	backend/school/$(DEPDIR)/$(am__dirstamp)
+backend/network/$(am__dirstamp):
+	@$(MKDIR_P) backend/network
+	@: > backend/network/$(am__dirstamp)
+backend/network/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) backend/network/$(DEPDIR)
+	@: > backend/network/$(DEPDIR)/$(am__dirstamp)
+backend/network/network.$(OBJEXT): backend/network/$(am__dirstamp) \
+	backend/network/$(DEPDIR)/$(am__dirstamp)
+backend/jobs/$(am__dirstamp):
+	@$(MKDIR_P) backend/jobs
+	@: > backend/jobs/$(am__dirstamp)
+backend/jobs/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) backend/jobs/$(DEPDIR)
+	@: > backend/jobs/$(DEPDIR)/$(am__dirstamp)
+backend/jobs/jobs.$(OBJEXT): backend/jobs/$(am__dirstamp) \
+	backend/jobs/$(DEPDIR)/$(am__dirstamp)
 
 liblife.a: $(liblife_a_OBJECTS) $(liblife_a_DEPENDENCIES) $(EXTRA_liblife_a_DEPENDENCIES) 
 	$(AM_V_at)-rm -f liblife.a
@@ -496,28 +500,28 @@ lifesim$(EXEEXT): $(lifesim_OBJECTS) $(lifesim_DEPENDENCIES) $(EXTRA_lifesim_DEP
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f $(top_builddir)/backend/events/*.$(OBJEXT)
-	-rm -f $(top_builddir)/backend/interface/*.$(OBJEXT)
-	-rm -f $(top_builddir)/backend/jobs/*.$(OBJEXT)
-	-rm -f $(top_builddir)/backend/life/*.$(OBJEXT)
-	-rm -f $(top_builddir)/backend/names/*.$(OBJEXT)
-	-rm -f $(top_builddir)/backend/nations/*.$(OBJEXT)
-	-rm -f $(top_builddir)/backend/network/*.$(OBJEXT)
-	-rm -f $(top_builddir)/backend/school/*.$(OBJEXT)
+	-rm -f backend/events/*.$(OBJEXT)
+	-rm -f backend/interface/*.$(OBJEXT)
+	-rm -f backend/jobs/*.$(OBJEXT)
+	-rm -f backend/life/*.$(OBJEXT)
+	-rm -f backend/names/*.$(OBJEXT)
+	-rm -f backend/nations/*.$(OBJEXT)
+	-rm -f backend/network/*.$(OBJEXT)
+	-rm -f backend/school/*.$(OBJEXT)
 	-rm -f frontend/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/events/$(DEPDIR)/urgent_life_event.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/events/$(DEPDIR)/year_logger.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/interface/$(DEPDIR)/interface.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/jobs/$(DEPDIR)/jobs.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/life/$(DEPDIR)/life.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/names/$(DEPDIR)/name_generator.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/nations/$(DEPDIR)/nation_generator.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/network/$(DEPDIR)/network.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@$(top_builddir)/backend/school/$(DEPDIR)/life_education.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/events/$(DEPDIR)/urgent_life_event.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/events/$(DEPDIR)/year_logger.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/interface/$(DEPDIR)/interface.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/jobs/$(DEPDIR)/jobs.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/life/$(DEPDIR)/life.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/names/$(DEPDIR)/name_generator.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/nations/$(DEPDIR)/nation_generator.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/network/$(DEPDIR)/network.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/school/$(DEPDIR)/life_education.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@frontend/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -805,24 +809,24 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f backend/events/$(DEPDIR)/$(am__dirstamp)
+	-rm -f backend/events/$(am__dirstamp)
+	-rm -f backend/interface/$(DEPDIR)/$(am__dirstamp)
+	-rm -f backend/interface/$(am__dirstamp)
+	-rm -f backend/jobs/$(DEPDIR)/$(am__dirstamp)
+	-rm -f backend/jobs/$(am__dirstamp)
+	-rm -f backend/life/$(DEPDIR)/$(am__dirstamp)
+	-rm -f backend/life/$(am__dirstamp)
+	-rm -f backend/names/$(DEPDIR)/$(am__dirstamp)
+	-rm -f backend/names/$(am__dirstamp)
+	-rm -f backend/nations/$(DEPDIR)/$(am__dirstamp)
+	-rm -f backend/nations/$(am__dirstamp)
+	-rm -f backend/network/$(DEPDIR)/$(am__dirstamp)
+	-rm -f backend/network/$(am__dirstamp)
+	-rm -f backend/school/$(DEPDIR)/$(am__dirstamp)
+	-rm -f backend/school/$(am__dirstamp)
 	-rm -f frontend/$(DEPDIR)/$(am__dirstamp)
 	-rm -f frontend/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/events/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/backend/events/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/events/$(am__dirstamp)" || rm -f $(top_builddir)/backend/events/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/interface/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/backend/interface/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/interface/$(am__dirstamp)" || rm -f $(top_builddir)/backend/interface/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/jobs/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/backend/jobs/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/jobs/$(am__dirstamp)" || rm -f $(top_builddir)/backend/jobs/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/life/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/backend/life/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/life/$(am__dirstamp)" || rm -f $(top_builddir)/backend/life/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/names/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/backend/names/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/names/$(am__dirstamp)" || rm -f $(top_builddir)/backend/names/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/nations/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/backend/nations/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/nations/$(am__dirstamp)" || rm -f $(top_builddir)/backend/nations/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/network/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/backend/network/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/network/$(am__dirstamp)" || rm -f $(top_builddir)/backend/network/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/school/$(DEPDIR)/$(am__dirstamp)" || rm -f $(top_builddir)/backend/school/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(top_builddir)/backend/school/$(am__dirstamp)" || rm -f $(top_builddir)/backend/school/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -834,15 +838,15 @@ clean-am: clean-binPROGRAMS clean-generic clean-noinstLIBRARIES \
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-		-rm -f $(top_builddir)/backend/events/$(DEPDIR)/urgent_life_event.Po
-	-rm -f $(top_builddir)/backend/events/$(DEPDIR)/year_logger.Po
-	-rm -f $(top_builddir)/backend/interface/$(DEPDIR)/interface.Po
-	-rm -f $(top_builddir)/backend/jobs/$(DEPDIR)/jobs.Po
-	-rm -f $(top_builddir)/backend/life/$(DEPDIR)/life.Po
-	-rm -f $(top_builddir)/backend/names/$(DEPDIR)/name_generator.Po
-	-rm -f $(top_builddir)/backend/nations/$(DEPDIR)/nation_generator.Po
-	-rm -f $(top_builddir)/backend/network/$(DEPDIR)/network.Po
-	-rm -f $(top_builddir)/backend/school/$(DEPDIR)/life_education.Po
+		-rm -f backend/events/$(DEPDIR)/urgent_life_event.Po
+	-rm -f backend/events/$(DEPDIR)/year_logger.Po
+	-rm -f backend/interface/$(DEPDIR)/interface.Po
+	-rm -f backend/jobs/$(DEPDIR)/jobs.Po
+	-rm -f backend/life/$(DEPDIR)/life.Po
+	-rm -f backend/names/$(DEPDIR)/name_generator.Po
+	-rm -f backend/nations/$(DEPDIR)/nation_generator.Po
+	-rm -f backend/network/$(DEPDIR)/network.Po
+	-rm -f backend/school/$(DEPDIR)/life_education.Po
 	-rm -f frontend/$(DEPDIR)/main.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -891,15 +895,15 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-		-rm -f $(top_builddir)/backend/events/$(DEPDIR)/urgent_life_event.Po
-	-rm -f $(top_builddir)/backend/events/$(DEPDIR)/year_logger.Po
-	-rm -f $(top_builddir)/backend/interface/$(DEPDIR)/interface.Po
-	-rm -f $(top_builddir)/backend/jobs/$(DEPDIR)/jobs.Po
-	-rm -f $(top_builddir)/backend/life/$(DEPDIR)/life.Po
-	-rm -f $(top_builddir)/backend/names/$(DEPDIR)/name_generator.Po
-	-rm -f $(top_builddir)/backend/nations/$(DEPDIR)/nation_generator.Po
-	-rm -f $(top_builddir)/backend/network/$(DEPDIR)/network.Po
-	-rm -f $(top_builddir)/backend/school/$(DEPDIR)/life_education.Po
+		-rm -f backend/events/$(DEPDIR)/urgent_life_event.Po
+	-rm -f backend/events/$(DEPDIR)/year_logger.Po
+	-rm -f backend/interface/$(DEPDIR)/interface.Po
+	-rm -f backend/jobs/$(DEPDIR)/jobs.Po
+	-rm -f backend/life/$(DEPDIR)/life.Po
+	-rm -f backend/names/$(DEPDIR)/name_generator.Po
+	-rm -f backend/nations/$(DEPDIR)/nation_generator.Po
+	-rm -f backend/network/$(DEPDIR)/network.Po
+	-rm -f backend/school/$(DEPDIR)/life_education.Po
 	-rm -f frontend/$(DEPDIR)/main.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

@@ -10,18 +10,24 @@ AC_LANG(C++)
 
 # Checks for programs.
 AC_PROG_CXX
+AC_PROG_AWK
+AC_PROG_INSTALL
 AC_PROG_RANLIB
+AC_PROG_MKDIR_P
 
 # Checks for libraries.
+AC_CHECK_LIB([curl], [curl_easy_init])
 
 # Checks for header files.
-AC_CHECK_HEADERS([curl/curl.h], [], [AC_MSG_ERROR([curl/curl.h not found.])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
+AC_TYPE_SIZE_T
 
 # Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([strchr strstr])
 
 AC_CONFIG_FILES([Makefile])
-
 AC_OUTPUT
