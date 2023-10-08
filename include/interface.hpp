@@ -51,6 +51,13 @@ class Interface {
     int GetAgeAtYear(int year);
     void RegisterLoadingScreenCallback(void(*callback)(int,int));
     void SetCanUseCJK(bool can);
+    int GetJobListSize();
+    std::string GetJobTitle(int job_id);
+    int GetJobPay(int job_id);
+    std::string GetJobRequirements(int job_id);
+    std::string GetCompanyDetails(int job_id);
+    void ApplyForJob(int job_id);
+    void RefreshJobList();
 };
 
 #endif /* _LIFE_INTERFACE_ */

@@ -6,6 +6,7 @@ PlayerLife::PlayerLife(UrgentLifeEventLogger *u_logger, YearLogger *y_logger)
 {
     nation_generator = new NationGenerator;
     name_generator = new NameGenerator;
+    employer = new Employer(nation, loading_screen_callback);
     urgent_life_event_logger = u_logger;
     year_logger = y_logger;
 }
@@ -126,6 +127,7 @@ void PlayerLife::Die(CauseOfDeath cause)
 void PlayerLife::RegisterLoadingScreenCallback(void(*callback)(int,int))
 {
     loading_screen_callback = callback;
+    employer->loading_screen_callback = callback;
 }
 
 void PlayerLife::SetCanUseCJK(bool can)

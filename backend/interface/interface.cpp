@@ -2,12 +2,23 @@
 #include "life.hpp"
 #include "events.hpp"
 #include <iostream>
+#include <memory>
 
 PlayerLife *current_life;
 YearLogger *year_logger;
 UrgentLifeEventLogger *urgent_life_event_logger;
 int current_year;
 
+template<typename ... Args>
+std::string string_format( const std::string& format, Args ... args )
+{
+    int size_s = std::snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    if( size_s <= 0 ){ throw std::runtime_error( "Error during formatting." ); }
+    auto size = static_cast<size_t>( size_s );
+    std::unique_ptr<char[]> buf( new char[ size ] );
+    std::snprintf( buf.get(), size, format.c_str(), args ... );
+    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
+}
 
 Interface::Interface()
 {
@@ -107,4 +118,68 @@ void Interface::RegisterLoadingScreenCallback(void(*callback)(int,int))
 void Interface::SetCanUseCJK(bool can)
 {
     current_life->SetCanUseCJK(can);
+}
+
+int Interface::GetJobListSize()
+{
+    return current_life->employer->available_jobs.size();
+}
+
+std::string Interface::GetJobTitle(int job_id)
+{
+    std::string ret = current_life->employer->available_jobs[job_id]->industry;
+    ret.append(current_life->employer->available_jobs[job_id]->title);
+
+    return ret;
+}
+
+int Interface::GetJobPay(int job_id)
+{
+    return current_life->employer->available_jobs[job_id]->pay;
+}
+
+std::string Interface::GetJobRequirements(int job_id)
+{
+    return current_life->employer->available_jobs[job_id]->GetJobRequirementString();
+}
+
+std::string Interface::GetCompanyDetails(int job_id)
+{
+    return current_life->employer->available_jobs[job_id]->GetCompanyDetailsString();
+}
+
+bool is_vowel(char c)
+{
+    c = tolower(c);
+    return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+}
+
+void Interface::ApplyForJob(int job_id)
+{
+    Job *job = current_life->employer->available_jobs[job_id];
+    bool result = job->Apply();
+    UrgentLifeEvent *evt = new UrgentLifeEvent;
+
+    if (result)
+    {
+        evt->title = "Nice One";
+        std::string a_an = is_vowel(job->industry.data()[0]) ? "n " : " ";
+        evt->content = string_format("You got the job as a%s%s %s at %s.", a_an.c_str(), job->industry.c_str(), job->title.c_str(), job->company.name.c_str());
+        evt->options = {"Okay"};
+        evt->default_option = 1;
+    }
+    else
+    {
+        evt->title = "Bad News";
+        evt->content = "You didn't get an interview.";
+        evt->options = {"Okay"};
+        evt->default_option = 1;
+    }
+
+    urgent_life_event_logger->PromptUrgentLifeEvent(evt);
+}
+
+void Interface::RefreshJobList()
+{
+    current_life->employer->Refresh();
 }

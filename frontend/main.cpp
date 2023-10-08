@@ -83,9 +83,110 @@ void cv_menu(Interface *interface)
     }
 }
 
+void current_job_menu(Interface *interface)
+{
+    std::cout << "Do this later." << std::endl;
+}
+
+void selected_job(Interface *interface, int job_id)
+{
+    while (1)
+    {
+        std::cout << "Your options: " << std::endl;
+        std::cout << "[ 1] View job requirements" << std::endl;
+        std::cout << "[ 2] View company details" << std::endl;
+        std::cout << "[ 3] Apply for job" << std::endl;
+        std::cout << "[*4] Go back" << std::endl;
+        std::cout << "Your option: ";
+
+        switch(get_input(4, 4))
+        {
+            case 1:
+            std::cout << "Requirements: " << interface->GetJobRequirements(job_id) << std::endl;
+            break;
+            case 2:
+            std::cout << interface->GetCompanyDetails(job_id) << std::endl;
+            break;
+            case 3:
+            interface->ApplyForJob(job_id);
+            break;
+            case 4:
+            return;
+        }
+    }
+}
+
+void available_job_menu(Interface *interface)
+{
+    static bool refreshed = false;
+    if (!refreshed)
+    {
+        std::cout << "Refreshing Job List..." << std::endl;
+        interface->RefreshJobList();
+        refreshed = true;
+    }
+
+    while (1)
+    {
+        std::cout << "Here are the available jobs:" << std::endl;
+
+        for (int i = 0; i < interface->GetJobListSize(); i++)
+        {
+            std::cout << i+1 << ": " << interface->GetJobTitle(i) << " ($" << interface->GetJobPay(i) << ")" << std::endl;
+        }
+
+        std::cout << "Your options: " << std::endl;
+        std::cout << "[ 1] Select job" << std::endl;
+        std::cout << "[ 2] Refresh list" << std::endl;
+        std::cout << "[*3] Go back" << std::endl;
+        std::cout << "Your option: ";
+
+        switch(get_input(3, 3))
+        {
+            case 1:
+            std::cout << "What job would you like to select? ";
+            selected_job(interface, get_input(-1, interface->GetJobListSize())-1);
+            case 2:
+            interface->RefreshJobList();
+            break;
+            case 3:
+            return;
+        }
+    }
+}
+
+void job_history_menu(Interface *interface)
+{
+    std::cout << "Do this later." << std::endl;
+}
+
 void job_menu(Interface *interface)
 {
+    while (1)
+    {
+        std::cout << "Your options: " << std::endl;
+        std::cout << "[ 1] View current job" << std::endl;
+        std::cout << "[ 2] View available jobs" << std::endl;
+        std::cout << "[ 3] View job history" << std::endl;
+        std::cout << "[X4] View careers" << std::endl;
+        std::cout << "[*5] Main menu" << std::endl;
 
+        std::cout << "Your option: ";
+        switch(get_input(4, 5))
+        {
+            case 1:
+            current_job_menu(interface);
+            break;
+            case 2:
+            available_job_menu(interface);
+            break;
+            case 3:
+            job_history_menu(interface);
+            break;
+            case 5:
+            return;
+        }
+    }
 }
 
 void relationship_menu(Interface *interface)

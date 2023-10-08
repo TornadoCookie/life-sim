@@ -6,6 +6,7 @@
 #include "names.hpp"
 #include "events.hpp"
 #include "school.hpp"
+#include "jobs.hpp"
 
 class LifeStats {
     public:
@@ -50,6 +51,7 @@ class Life {
     LifeFinance finance;
     LifeEducation education;
     CauseOfDeath cause_of_death;
+    Job job;
     void Die(CauseOfDeath cause);
 };
 
@@ -63,6 +65,8 @@ class PlayerLife : public Life {
     void Die(CauseOfDeath cause);
     void RegisterLoadingScreenCallback(void(*callback)(int,int));
     void SetCanUseCJK(bool can);
+
+    Employer *employer;
 
     private:
     NationGenerator *nation_generator;
