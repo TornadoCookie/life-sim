@@ -83,11 +83,29 @@ void PlayerLife::StartRandomLife()
         mother->first_name.c_str(), mother->last_name.c_str(), mother->age));
 }
 
-void age_up_life(Life *life)
+std::string get_relation_to_player(Life *life, PlayerLife *plr)
+{
+    if (life == plr->GetMother()) return "mother";
+    if (life == plr->GetFather()) return "father";
+    return "relative";    
+}
+
+void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger)
 {
     if (life->is_dead) return;
     
     life->age++;
+
+    if (life->age == 6)
+    {
+        if (life == plr)
+            y_logger->AddToThisYearLog("I started school.\n");
+        else
+            y_logger->AddToThisYearLog(string_format("My %s started school.\n", get_relation_to_player(life, plr).c_str()));
+        
+        life->education.current_schooling = EducationLevel::Elementary;
+    }
+
     if (life->age > 65)
         life->chance_of_dying++;
     if (rand() % 100 < life->chance_of_dying)
@@ -96,9 +114,9 @@ void age_up_life(Life *life)
 
 void PlayerLife::AgeUp()
 {
-    age_up_life(this);
-    age_up_life(mother);
-    age_up_life(father);
+    age_up_life(this, this, year_logger);
+    age_up_life(this, mother, year_logger);
+    age_up_life(this, father, year_logger);
 }
 
 Life *PlayerLife::GetMother()
