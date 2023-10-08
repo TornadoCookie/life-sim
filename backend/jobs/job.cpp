@@ -1,19 +1,6 @@
 #include "jobs.hpp"
 #include "nations.hpp"
 #include <iostream>
-#include <memory>
-
-template<typename ... Args>
-std::string string_format( const std::string& format, Args ... args )
-{
-    int size_s = std::snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
-    if( size_s <= 0 ){ throw std::runtime_error( "Error during formatting." ); }
-    auto size = static_cast<size_t>( size_s );
-    std::unique_ptr<char[]> buf( new char[ size ] );
-    std::snprintf( buf.get(), size, format.c_str(), args ... );
-    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
-}
-
 
 std::string Job::GetJobRequirementString()
 {
@@ -80,40 +67,4 @@ std::string Job::GetCompanyDetailsString()
 Job::Job()
 {
     company.name_generator = new NameGenerator;
-}
-
-#define N_JOBS 10
-
-Employer::Employer(Nation nation, void(*loading_screen_callback)(int,int))
-{
-    this->nation = nation;
-    this->loading_screen_callback = loading_screen_callback;
-    available_jobs.reserve(N_JOBS);
-    for (int i = 0; i < N_JOBS; i++)
-    {
-        Job *job = new Job;
-        available_jobs.push_back(job);
-    }
-    std::cout << "size=" << available_jobs.size() << ", capacity=" << available_jobs.capacity();
-}
-
-void Employer::Refresh()
-{
-    for (int i = 0; i < N_JOBS; i++)
-    {
-        loading_screen_callback(i+1, N_JOBS + 1);
-        available_jobs[i]->nation = nation;
-        available_jobs[i]->Randomize();
-    }
-}
-
-void Company::Randomize()
-{
-    name = "COMPANY";
-    founded = rand() % 100 + 1900;
-    ceo_name = "John Doe";
-    //ceo_name = string_format("%s %s", name_generator->GetRandomFirstName(nation, Gender::Male), name_generator->GetRandomLastName(nation, Gender::Male));
-    employees = rand() % 500;
-    company_value = rand() % 30000;
-    industry = "N/A";
 }

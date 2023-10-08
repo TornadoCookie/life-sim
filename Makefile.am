@@ -19,7 +19,10 @@ liblife_a_SOURCES = \
     $(srcdir)/backend/nations/nation_generator.cpp \
     $(srcdir)/backend/school/life_education.cpp \
     $(srcdir)/backend/network/network.cpp \
-    $(srcdir)/backend/jobs/jobs.cpp \
+    $(srcdir)/backend/jobs/job.cpp \
+    $(srcdir)/backend/jobs/company.cpp \
+    $(srcdir)/backend/jobs/employer.cpp \
+\
     $(srcdir)/include/events.hpp \
     $(srcdir)/include/jobs.hpp \
     $(srcdir)/include/life.hpp \

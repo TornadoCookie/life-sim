@@ -121,7 +121,8 @@ am_liblife_a_OBJECTS = backend/events/urgent_life_event.$(OBJEXT) \
 	backend/names/name_generator.$(OBJEXT) \
 	backend/nations/nation_generator.$(OBJEXT) \
 	backend/school/life_education.$(OBJEXT) \
-	backend/network/network.$(OBJEXT) backend/jobs/jobs.$(OBJEXT)
+	backend/network/network.$(OBJEXT) backend/jobs/job.$(OBJEXT) \
+	backend/jobs/company.$(OBJEXT) backend/jobs/employer.$(OBJEXT)
 liblife_a_OBJECTS = $(am_liblife_a_OBJECTS)
 am_lifesim_OBJECTS = frontend/main.$(OBJEXT)
 lifesim_OBJECTS = $(am_lifesim_OBJECTS)
@@ -144,7 +145,9 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = backend/events/$(DEPDIR)/urgent_life_event.Po \
 	backend/events/$(DEPDIR)/year_logger.Po \
 	backend/interface/$(DEPDIR)/interface.Po \
-	backend/jobs/$(DEPDIR)/jobs.Po backend/life/$(DEPDIR)/life.Po \
+	backend/jobs/$(DEPDIR)/company.Po \
+	backend/jobs/$(DEPDIR)/employer.Po \
+	backend/jobs/$(DEPDIR)/job.Po backend/life/$(DEPDIR)/life.Po \
 	backend/names/$(DEPDIR)/name_generator.Po \
 	backend/nations/$(DEPDIR)/nation_generator.Po \
 	backend/network/$(DEPDIR)/network.Po \
@@ -341,7 +344,10 @@ liblife_a_SOURCES = \
     $(srcdir)/backend/nations/nation_generator.cpp \
     $(srcdir)/backend/school/life_education.cpp \
     $(srcdir)/backend/network/network.cpp \
-    $(srcdir)/backend/jobs/jobs.cpp \
+    $(srcdir)/backend/jobs/job.cpp \
+    $(srcdir)/backend/jobs/company.cpp \
+    $(srcdir)/backend/jobs/employer.cpp \
+\
     $(srcdir)/include/events.hpp \
     $(srcdir)/include/jobs.hpp \
     $(srcdir)/include/life.hpp \
@@ -500,7 +506,11 @@ backend/jobs/$(am__dirstamp):
 backend/jobs/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) backend/jobs/$(DEPDIR)
 	@: > backend/jobs/$(DEPDIR)/$(am__dirstamp)
-backend/jobs/jobs.$(OBJEXT): backend/jobs/$(am__dirstamp) \
+backend/jobs/job.$(OBJEXT): backend/jobs/$(am__dirstamp) \
+	backend/jobs/$(DEPDIR)/$(am__dirstamp)
+backend/jobs/company.$(OBJEXT): backend/jobs/$(am__dirstamp) \
+	backend/jobs/$(DEPDIR)/$(am__dirstamp)
+backend/jobs/employer.$(OBJEXT): backend/jobs/$(am__dirstamp) \
 	backend/jobs/$(DEPDIR)/$(am__dirstamp)
 
 liblife.a: $(liblife_a_OBJECTS) $(liblife_a_DEPENDENCIES) $(EXTRA_liblife_a_DEPENDENCIES) 
@@ -538,7 +548,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@backend/events/$(DEPDIR)/urgent_life_event.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@backend/events/$(DEPDIR)/year_logger.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@backend/interface/$(DEPDIR)/interface.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@backend/jobs/$(DEPDIR)/jobs.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/jobs/$(DEPDIR)/company.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/jobs/$(DEPDIR)/employer.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@backend/jobs/$(DEPDIR)/job.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@backend/life/$(DEPDIR)/life.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@backend/names/$(DEPDIR)/name_generator.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@backend/nations/$(DEPDIR)/nation_generator.Po@am__quote@ # am--include-marker
@@ -863,7 +875,9 @@ distclean: distclean-am
 		-rm -f backend/events/$(DEPDIR)/urgent_life_event.Po
 	-rm -f backend/events/$(DEPDIR)/year_logger.Po
 	-rm -f backend/interface/$(DEPDIR)/interface.Po
-	-rm -f backend/jobs/$(DEPDIR)/jobs.Po
+	-rm -f backend/jobs/$(DEPDIR)/company.Po
+	-rm -f backend/jobs/$(DEPDIR)/employer.Po
+	-rm -f backend/jobs/$(DEPDIR)/job.Po
 	-rm -f backend/life/$(DEPDIR)/life.Po
 	-rm -f backend/names/$(DEPDIR)/name_generator.Po
 	-rm -f backend/nations/$(DEPDIR)/nation_generator.Po
@@ -920,7 +934,9 @@ maintainer-clean: maintainer-clean-am
 		-rm -f backend/events/$(DEPDIR)/urgent_life_event.Po
 	-rm -f backend/events/$(DEPDIR)/year_logger.Po
 	-rm -f backend/interface/$(DEPDIR)/interface.Po
-	-rm -f backend/jobs/$(DEPDIR)/jobs.Po
+	-rm -f backend/jobs/$(DEPDIR)/company.Po
+	-rm -f backend/jobs/$(DEPDIR)/employer.Po
+	-rm -f backend/jobs/$(DEPDIR)/job.Po
 	-rm -f backend/life/$(DEPDIR)/life.Po
 	-rm -f backend/names/$(DEPDIR)/name_generator.Po
 	-rm -f backend/nations/$(DEPDIR)/nation_generator.Po
