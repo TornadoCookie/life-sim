@@ -164,6 +164,18 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
 SOURCES = $(liblife_a_SOURCES) $(lifesim_SOURCES)
 DIST_SOURCES = $(liblife_a_SOURCES) $(lifesim_SOURCES)
 am__can_run_installinfo = \
@@ -315,7 +327,10 @@ top_srcdir = @top_srcdir@
 noinst_LIBRARIES = liblife.a 
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I$(srcdir)/include -g -Wall
-lifesim_SOURCES = frontend/main.cpp
+lifesim_SOURCES = \
+    $(srcdir)/frontend/main.cpp \
+    $(srcdir)/include/interface.hpp
+
 lifesim_LDADD = $(LDADD) -lcurl
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
@@ -326,7 +341,14 @@ liblife_a_SOURCES = \
     $(srcdir)/backend/nations/nation_generator.cpp \
     $(srcdir)/backend/school/life_education.cpp \
     $(srcdir)/backend/network/network.cpp \
-    $(srcdir)/backend/jobs/jobs.cpp
+    $(srcdir)/backend/jobs/jobs.cpp \
+    $(srcdir)/include/events.hpp \
+    $(srcdir)/include/jobs.hpp \
+    $(srcdir)/include/life.hpp \
+    $(srcdir)/include/names.hpp \
+    $(srcdir)/include/nations.hpp \
+    $(srcdir)/include/network.hpp \
+    $(srcdir)/include/school.hpp
 
 all: all-am
 

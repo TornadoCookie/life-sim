@@ -615,7 +615,7 @@ PACKAGE_STRING='Life Simulator 0.10'
 PACKAGE_BUGREPORT='helix.graziani@hotmail.com'
 PACKAGE_URL=''
 
-ac_unique_file="configure.ac"
+ac_unique_file="include/school.hpp"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stddef.h>
