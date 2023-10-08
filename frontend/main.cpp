@@ -249,17 +249,34 @@ void handle_loading_screen(int now, int left)
     std::cout << "Loading... (" << now << "/" << left << ")" << std::endl;
 }
 
-int main()
+void start_over(Interface *);
+
+void dead_menu(Interface *interface)
 {
-    Interface *interface = new Interface;
+    while (1)
+    {
+        std::cout << "Your options:" << std::endl;
+        std::cout << "[X1] View obituary" << std::endl;
+        std::cout << "[ 2] Start over" << std::endl;
+        std::cout << "[ 3] Quit" << std::endl;
+        std::cout << "Your option:";
+
+        switch(get_input(-1, 3))
+        {
+            case 2:
+            start_over(interface);
+            case 3:
+            exit(EXIT_SUCCESS);
+        }
+    }
+}
+
+void start_over(Interface *interface)
+{
     bool aged_up = true;
     YearLog log;
     int option;
 
-    interface->SetCanUseCJK(false);
-
-    interface->RegisterUrgentLifeEventCallback(handle_urgent_life_event);
-    interface->RegisterLoadingScreenCallback(handle_loading_screen);
     interface->StartRandomLife();
 
     while (1)
@@ -269,6 +286,9 @@ int main()
             log = interface->GetLatestYearLog();
             print_year_log(interface, log);
         }
+
+        if (interface->IsDead())
+            dead_menu(interface);
 
         std::cout << "Your options:" << std::endl;
         std::cout << "[*1] Age Up" << std::endl;
@@ -288,6 +308,18 @@ int main()
         handle_main_menu_option(interface, option, &aged_up);
         
     }
+}
+
+int main()
+{
+    Interface *interface = new Interface;
+
+    interface->SetCanUseCJK(false);
+
+    interface->RegisterUrgentLifeEventCallback(handle_urgent_life_event);
+    interface->RegisterLoadingScreenCallback(handle_loading_screen);
+    
+    start_over(interface);
 
     return 0;
 }
