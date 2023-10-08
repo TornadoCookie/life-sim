@@ -109,7 +109,12 @@ void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger)
     if (life->age > 65)
         life->chance_of_dying++;
     if (rand() % 100 < life->chance_of_dying)
-        life->Die(CauseOfDeath::NaturalCauses);
+    {
+        if (life == plr)
+            plr->Die(CauseOfDeath::NaturalCauses);
+        else
+            life->Die(CauseOfDeath::NaturalCauses);
+    }
 }
 
 void PlayerLife::AgeUp()
