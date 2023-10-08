@@ -1,6 +1,4 @@
 autom4te.cache
 .vscode
 build
-aclocal.m4
-Makefile.in
 configure~
