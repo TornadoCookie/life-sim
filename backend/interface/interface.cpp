@@ -183,3 +183,8 @@ void Interface::RefreshJobList()
 {
     current_life->employer->Refresh();
 }
+
+bool Interface::IsDead()
+{
+    return current_life->is_dead;
+}

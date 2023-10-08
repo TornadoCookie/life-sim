@@ -58,6 +58,7 @@ class Interface {
     std::string GetCompanyDetails(int job_id);
     void ApplyForJob(int job_id);
     void RefreshJobList();
+    bool IsDead();
 };
 
 #endif /* _LIFE_INTERFACE_ */
