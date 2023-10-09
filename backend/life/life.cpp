@@ -22,9 +22,34 @@ std::string string_format( const std::string& format, Args ... args )
     return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
 }
 
+LifeStats random_life_stats()
+{
+    LifeStats ret;
+    ret.appearance = rand() % 100;
+    ret.fitness = rand() % 100;
+    ret.intelligence = rand() % 100;
+    ret.musical = rand() % 100;
+    ret.painting = rand() % 100;
+    ret.social = rand() % 100;
+    ret.happiness = 100;
+    return ret;
+}
+
+void add_potential(std::string potential, bool *done, YearLogger *y_logger)
+{
+    if (!*done)
+    {
+        y_logger->AddToThisYearLog("You have the potential to be:\n");
+        *done = true;
+    }
+
+    y_logger->AddToThisYearLog(string_format("- %s\n", potential.c_str()));
+}
+
 void PlayerLife::StartRandomLife()
 {
     int random_gender_number = rand(), acceptable_range;
+    bool done = false;
     UrgentLifeEvent *birth_event = new UrgentLifeEvent;
 
     is_dead = false;
@@ -66,6 +91,8 @@ void PlayerLife::StartRandomLife()
     father->age -= father->age >> 1;
     father->age += mother->age;
 
+    stats = random_life_stats();
+
     birth_event->default_option = 1;
     birth_event->options = {"Okay"};
     birth_event->title = "A New Life";
@@ -91,6 +118,12 @@ void PlayerLife::StartRandomLife()
         string_format("You are the son of:\n%s %s, %d.\n%s %s, %d.\n\n",
         father->first_name.c_str(), father->last_name.c_str(), father->age,
         mother->first_name.c_str(), mother->last_name.c_str(), mother->age));
+
+    if (stats.fitness > 60) add_potential("In the military", &done, year_logger);
+    if (stats.intelligence > 60) add_potential("An academic", &done, year_logger);
+    if (stats.musical > 60) add_potential("A musician", &done, year_logger);
+    if (stats.painting > 60) add_potential("An artist", &done, year_logger);
+    if (stats.social > 60) add_potential("A social media influencer", &done, year_logger);
 }
 
 std::string get_relation_to_player(Life *life, PlayerLife *plr)
