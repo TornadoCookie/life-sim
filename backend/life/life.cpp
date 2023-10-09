@@ -27,6 +27,8 @@ void PlayerLife::StartRandomLife()
     int random_gender_number = rand(), acceptable_range;
     UrgentLifeEvent *birth_event = new UrgentLifeEvent;
 
+    is_dead = false;
+
     if (random_gender_number & 1) gender = Gender::Male;
     else gender = Gender::Female;
 
