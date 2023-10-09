@@ -14,7 +14,6 @@ Employer::Employer(Nation nation, void(*loading_screen_callback)(int,int))
         Job *job = new Job;
         available_jobs.push_back(job);
     }
-    std::cout << "size=" << available_jobs.size() << ", capacity=" << available_jobs.capacity();
 }
 
 void Employer::Refresh()
