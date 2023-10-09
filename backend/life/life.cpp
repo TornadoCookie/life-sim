@@ -99,13 +99,13 @@ void PlayerLife::StartRandomLife()
 
     std::string gender_str = gender == Gender::Male ? "male" : "female";
     std::string nation_the_str = nation.shouldHaveTheBefore  ? "the " : " ";
-    birth_event->content = string_format("You were born a %s, in %s%s.\n\nYou have been named %s %s.\n\nYou are %s.",
+    birth_event->content = string_format("You were born a %s, in%s%s.\n\nYou have been named %s %s.\n\nYou are %s.",
         gender_str.c_str(), nation_the_str.c_str(), nation.name.c_str(),
         first_name.c_str(), last_name.c_str(), nation.demonym.c_str());
     urgent_life_event_logger->PromptUrgentLifeEvent(birth_event);
 
     year_logger->AddToThisYearLog(
-        string_format("You were born a %s in %s%s.\n\n Your name is %s %s.\n\n",
+        string_format("You were born a %s, in%s%s.\n\nYour name is %s %s.\n\n",
         gender_str.c_str(), nation_the_str.c_str(), nation.name.c_str(), first_name.c_str(),
         last_name.c_str()));
     
