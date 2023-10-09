@@ -66,47 +66,58 @@ std::string romanize_error(std::string romanize, CURLcode res)
     return romanize;
 }
 
+CURLcode make_request(std::string url, std::string post_data, struct MemoryStruct *chunk, bool is_json)
+{
+    CURL *curl = curl_easy_init();
+    CURLcode res;
+    struct curl_slist *headers = NULL;
+
+    if (!curl) return CURLE_FAILED_INIT;
+
+    res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    if (res) return res;
+
+    res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
+    if (res) return res;
+
+    res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+    if (res) return res;
+
+    res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)chunk);
+    if (res) return res;
+
+    if (is_json)
+    {
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+        res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        if (res) return res;
+    }
+
+    res = curl_easy_perform(curl);
+    if (res) return res;
+
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
+
+    return CURLE_OK;
+}
+
 std::string romanize_text(std::string romanize, Nation nation)
 {
     CURLcode res;
-    CURL *curl;
 
     struct MemoryStruct chunk;
     chunk.memory = (char *)malloc(1);
     chunk.size = 0;
 
-    curl = curl_easy_init();
-    if (!curl) return romanize_error(romanize, CURLE_OK);
-
     if (nation.api_name == "jp")
     {
         std::string url = "https://japonesbasico.com/furigana/procesa.php";
 
-        res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
         std::string post_data_format = "{\"japaneseText\":\"%s\",\"conversion\":\"romaji\",\"lang\":\"en\"}";
         std::string post_data = string_format(post_data_format, romanize.c_str());
 
-        res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        res = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, post_data.length());
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        struct curl_slist *headers = NULL;
-        headers = curl_slist_append(headers, "Content-Type: application/json");
-        res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) return romanize_error(romanize, res);
+        if ((res = make_request(url, post_data, &chunk, true))) return romanize_error(romanize, res);
 
         chunk.memory[chunk.size] = 0;
 
@@ -130,27 +141,11 @@ std::string romanize_text(std::string romanize, Nation nation)
     else if (nation.api_name == "kr")
     {
         std::string url = "https://asaokitan.net/tools/hangul2yale/web.py";
-        
-        res = curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        if (res != CURLE_OK) return romanize_error(romanize, res);
 
         std::string post_data_format = "hangul=%s";
         std::string post_data = string_format(post_data_format, romanize.c_str());
 
-        res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        res = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, post_data.length());
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-        if (res != CURLE_OK) return romanize_error(romanize, res);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) return romanize_error(romanize, res);
+        if ((res = make_request(url, post_data, &chunk, false))) return romanize_error(romanize, res);
 
         chunk.memory[chunk.size - 1] = 0;
 
@@ -179,7 +174,6 @@ bool used_up_last_name = true;
 
 std::string get_random_full_name(Nation nation, Gender gender, bool use_unicode)
 {
-    CURL *name_curl;
     std::string url, gender_str, post_data;
     CURLcode res;
 
@@ -190,9 +184,6 @@ std::string get_random_full_name(Nation nation, Gender gender, bool use_unicode)
     chunk.memory = (char *)malloc(1);
     chunk.size = 0;
 
-    name_curl = curl_easy_init();
-    if (!name_curl) return placeholder_name(nation, gender, CURLE_OK);
-
     gender_str = gender == Gender::Male ? "male" : "female";
 
     url = "https://randomgenerator.name/wp-admin/admin-ajax.php";
@@ -201,28 +192,7 @@ std::string get_random_full_name(Nation nation, Gender gender, bool use_unicode)
     post_data = string_format(post_data_format,
     gender_str.c_str(), nation.api_name.c_str());
 
-    res = curl_easy_setopt(name_curl, CURLOPT_URL, url.c_str());
-    if (res != CURLE_OK) return placeholder_name(nation, gender, res);
-
-    res = curl_easy_setopt(name_curl, CURLOPT_POST, 1);
-    if (res != CURLE_OK) return placeholder_name(nation, gender, res);
-
-    res = curl_easy_setopt(name_curl, CURLOPT_POSTFIELDS, post_data.c_str());
-    if (res != CURLE_OK) return placeholder_name(nation, gender, res);
-
-    res = curl_easy_setopt(name_curl, CURLOPT_POSTFIELDSIZE, post_data.length());
-    if (res != CURLE_OK) return placeholder_name(nation, gender, res);
-
-    res = curl_easy_setopt(name_curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-    if (res != CURLE_OK) return placeholder_name(nation, gender, res);
-
-    res = curl_easy_setopt(name_curl, CURLOPT_WRITEDATA, (void *)&chunk);
-    if (res != CURLE_OK) return placeholder_name(nation, gender, res);
-
-    res = curl_easy_perform(name_curl);
-    if (res != CURLE_OK) return placeholder_name(nation, gender, res);
-
-    curl_easy_cleanup(name_curl);
+    if ((res = make_request(url, post_data, &chunk, false))) return placeholder_name(nation, gender, res);
 
     chunk.memory[chunk.size] = 0;
 
