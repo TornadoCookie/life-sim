@@ -202,11 +202,91 @@ void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger, UrgentLifeEv
     }
 }
 
+bool set_lover(PlayerLife *plr, UrgentLifeEventLogger *u_logger, YearLogger *y_logger)
+{
+    Life *lover = plr->GetLover();
+
+    int acceptable_range;
+    if (plr->age <= 20) acceptable_range = 1;
+    else if (plr->age <= 30) acceptable_range = 3;
+    else if (plr->age <= 40) acceptable_range = 4;
+    else acceptable_range = 5;
+    /* Make lover's age within acceptable_range years of player's age */
+    lover->age = rand() % (acceptable_range << 1);
+    lover->age -= lover->age >> 1;
+    lover->age += plr->age;
+    lover->nation = plr->nation;
+
+    if (plr->gender == Gender::Male)
+        lover->gender = Gender::Female;
+    else
+        lover->gender = Gender::Male;
+
+    NameGenerator *temp_generator = new NameGenerator;
+    lover->first_name = temp_generator->GetRandomFirstName(lover->nation, lover->gender);
+    lover->last_name = temp_generator->GetRandomLastName(lover->nation, lover->gender);
+    delete temp_generator;
+
+    lover->stats = random_life_stats();
+
+    std::string gender_str = lover->gender == Gender::Male ? "male" : "female";
+
+    UrgentLifeEvent *evt = new UrgentLifeEvent;
+    evt->title = "Love <3";
+    evt->content = string_format("You have met a %s called %s %s.\n\nAge: %d.\nNationality: %s.\n\nAppearance: %d.", 
+    gender_str.c_str(), lover->first_name.c_str(), lover->last_name.c_str(), lover->age, lover->nation.demonym.c_str(), lover->stats.appearance);
+    evt->options = {"Go For A Date", "Leave It"};
+    evt->default_option = 1;
+    int option = u_logger->PromptUrgentLifeEvent(evt);
+
+    delete evt;
+
+    if (option == 2)
+        return false;
+
+    if (lover->stats.appearance > 50 && abs(plr->stats.appearance - lover->stats.appearance) > 20)
+    {
+        UrgentLifeEvent *rejection_evt = new UrgentLifeEvent;
+        rejection_evt->title = "</3";
+        rejection_evt->content = string_format("You were rejected by %s.", lover->first_name.c_str());
+        rejection_evt->options = {"Okay"};
+        rejection_evt->default_option = 1;
+        u_logger->PromptUrgentLifeEvent(rejection_evt);
+        delete rejection_evt;
+        y_logger->AddToThisYearLog(string_format("I was rejected by %s.\n", lover->first_name.c_str()));
+        return false;
+    }
+
+    UrgentLifeEvent *acceptance_evt = new UrgentLifeEvent;
+    acceptance_evt->title = "True love";
+    acceptance_evt->content = string_format("You are in a relationship with %s.", lover->first_name.c_str());
+    acceptance_evt->options = {"Okay"};
+    acceptance_evt->default_option = 1;
+    u_logger->PromptUrgentLifeEvent(acceptance_evt);
+    delete acceptance_evt;
+
+    y_logger->AddToThisYearLog(string_format("I'm now in a relationship with %s.\n", lover->first_name.c_str()));
+
+    lover->job.Randomize();
+    return true;
+}
+
 void PlayerLife::AgeUp()
 {
     age_up_life(this, this, year_logger, urgent_life_event_logger);
     age_up_life(this, mother, year_logger, urgent_life_event_logger);
     age_up_life(this, father, year_logger, urgent_life_event_logger);
+
+    if ((int)sexuality && !lover)
+    {
+        int lover_chance = rand() % 100;
+        if (lover_chance < 10)
+        {
+            lover = new Life;
+            if (!set_lover(this, urgent_life_event_logger, year_logger))
+                delete lover;
+        }
+    }
 }
 
 Life *PlayerLife::GetMother()
@@ -241,4 +321,9 @@ void PlayerLife::RegisterLoadingScreenCallback(void(*callback)(int,int))
 void PlayerLife::SetCanUseCJK(bool can)
 {
     name_generator->can_use_cjk = can;
+}
+
+Life *PlayerLife::GetLover()
+{
+    return lover;
 }

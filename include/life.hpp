@@ -69,6 +69,7 @@ class PlayerLife : public Life {
     void AgeUp();
     Life *GetMother();
     Life *GetFather();
+    Life *GetLover();
     void Die(CauseOfDeath cause);
     void RegisterLoadingScreenCallback(void(*callback)(int,int));
     void SetCanUseCJK(bool can);
@@ -82,6 +83,7 @@ class PlayerLife : public Life {
     YearLogger *year_logger;
     Life *mother;
     Life *father;
+    Life *lover;
     void(*loading_screen_callback)(int,int);
 };
 
