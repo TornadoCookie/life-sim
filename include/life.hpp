@@ -38,6 +38,12 @@ enum class CauseOfDeath {
     Suicide
 };
 
+enum class Sexuality {
+    NotChosen,
+    Heterosexual,
+    Max
+};
+
 class Life {
     public:
     std::string first_name;
@@ -52,6 +58,7 @@ class Life {
     LifeEducation education;
     CauseOfDeath cause_of_death;
     Job job;
+    Sexuality sexuality;
     void Die(CauseOfDeath cause);
 };
 

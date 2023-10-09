@@ -47,12 +47,14 @@ void PlayerLife::StartRandomLife()
     mother->last_name = last_name;
     mother->nation = nation;
     mother->age = rand() % 35 + 15; /* In range 15-50 */
+    mother->sexuality = Sexuality::Heterosexual;
 
     loading_screen_callback(4, 5);
     father = new Life;
     father->first_name = name_generator->GetRandomFirstName(nation, Gender::Male);
     father->last_name = last_name;
     father->nation = nation;
+    father->sexuality = Sexuality::Heterosexual;
 
     loading_screen_callback(5, 5);
     if (mother->age <= 20) acceptable_range = 1;
@@ -92,7 +94,42 @@ std::string get_relation_to_player(Life *life, PlayerLife *plr)
     return "relative";    
 }
 
-void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger)
+std::string sexuality_to_string(Sexuality sexuality)
+{
+    switch(sexuality)
+    {
+        case Sexuality::Heterosexual:
+            return "Heterosexual";
+        default:
+            return "None";
+    }
+}
+
+void set_sexuality(PlayerLife *plr, Life *life, YearLogger *y_logger, UrgentLifeEventLogger *u_logger)
+{
+    if (life == plr)
+    {
+        UrgentLifeEvent *evt = new UrgentLifeEvent;
+        evt->title = "Feelings";
+        evt->content = "What is your sexuality?";
+        evt->options = {"Heterosexual"};
+        evt->default_option = 1;
+
+        int chosen = u_logger->PromptUrgentLifeEvent(evt);
+        life->sexuality = (Sexuality)chosen;
+
+        y_logger->AddToThisYearLog(string_format("I am %s.\n", sexuality_to_string(life->sexuality).c_str()));
+    }
+    else
+    {
+        int chance = (rand() % ((int)Sexuality::Max - 1)) + 1;
+        life->sexuality = (Sexuality) chance;
+
+        y_logger->AddToThisYearLog(string_format("%s is %s.\n", life->first_name.c_str(), sexuality_to_string(life->sexuality).c_str()));
+    }
+}
+
+void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger, UrgentLifeEventLogger *u_logger)
 {
     if (life->is_dead) return;
     
@@ -108,6 +145,13 @@ void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger)
         life->education.current_schooling = EducationLevel::Elementary;
     }
 
+    if (life->age > 12 && life->sexuality == Sexuality::NotChosen)
+    {
+        int sexuality_chance = rand() % 100;
+        if (sexuality_chance < 10)
+            set_sexuality(plr, life, y_logger, u_logger);
+    }
+
     if (life->age > 65)
         life->chance_of_dying++;
     if (rand() % 100 < life->chance_of_dying)
@@ -121,9 +165,9 @@ void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger)
 
 void PlayerLife::AgeUp()
 {
-    age_up_life(this, this, year_logger);
-    age_up_life(this, mother, year_logger);
-    age_up_life(this, father, year_logger);
+    age_up_life(this, this, year_logger, urgent_life_event_logger);
+    age_up_life(this, mother, year_logger, urgent_life_event_logger);
+    age_up_life(this, father, year_logger, urgent_life_event_logger);
 }
 
 Life *PlayerLife::GetMother()
