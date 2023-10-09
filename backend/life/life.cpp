@@ -81,6 +81,12 @@ void PlayerLife::StartRandomLife()
         string_format("You were born a %s in %s%s.\n\n Your name is %s %s.\n\n",
         gender_str.c_str(), nation_the_str.c_str(), nation.name.c_str(), first_name.c_str(),
         last_name.c_str()));
+    
+    if (mother->age < 20)
+        year_logger->AddToThisYearLog("You were born to young parents.\n");
+    if (mother->age > 40)
+        year_logger->AddToThisYearLog("You were born to old parents.\n");
+
     year_logger->AddToThisYearLog(
         string_format("You are the son of:\n%s %s, %d.\n%s %s, %d.\n\n",
         father->first_name.c_str(), father->last_name.c_str(), father->age,
