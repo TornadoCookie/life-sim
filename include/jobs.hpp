@@ -40,7 +40,6 @@ class Job {
     Company company;
     Nation nation;
 
-    Job();
     bool Apply();
     std::string GetJobRequirementString();
     std::string GetCompanyDetailsString();

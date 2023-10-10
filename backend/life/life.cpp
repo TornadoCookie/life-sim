@@ -5,7 +5,6 @@
 PlayerLife::PlayerLife(UrgentLifeEventLogger *u_logger, YearLogger *y_logger)
 {
     nation_generator = new NationGenerator;
-    name_generator = new NameGenerator;
     employer = new Employer(nation, loading_screen_callback);
     urgent_life_event_logger = u_logger;
     year_logger = y_logger;
@@ -58,6 +57,9 @@ void PlayerLife::StartRandomLife()
     else gender = Gender::Female;
 
     nation = nation_generator->GetRandomNation();
+    if (name_generator)
+        delete name_generator;
+    name_generator = new NameGenerator(nation);
 
     loading_screen_callback(1, 5);
     first_name = name_generator->GetRandomFirstName(nation, gender);
@@ -222,10 +224,8 @@ bool set_lover(PlayerLife *plr, UrgentLifeEventLogger *u_logger, YearLogger *y_l
     else
         lover->gender = Gender::Male;
 
-    NameGenerator *temp_generator = new NameGenerator;
-    lover->first_name = temp_generator->GetRandomFirstName(lover->nation, lover->gender);
-    lover->last_name = temp_generator->GetRandomLastName(lover->nation, lover->gender);
-    delete temp_generator;
+    lover->first_name = name_generator->GetRandomFirstName(lover->nation, lover->gender);
+    lover->last_name = name_generator->GetRandomLastName(lover->nation, lover->gender);
 
     lover->stats = random_life_stats();
 
@@ -320,7 +320,7 @@ void PlayerLife::RegisterLoadingScreenCallback(void(*callback)(int,int))
 
 void PlayerLife::SetCanUseCJK(bool can)
 {
-    name_generator->can_use_cjk = can;
+    name_generator->SetCanUseCJK(can);
 }
 
 Life *PlayerLife::GetLover()

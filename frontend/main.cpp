@@ -278,6 +278,7 @@ void start_over(Interface *interface)
     int option;
 
     interface->StartRandomLife();
+    interface->SetCanUseCJK(false);
 
     while (1)
     {
@@ -313,9 +314,6 @@ void start_over(Interface *interface)
 int main()
 {
     Interface *interface = new Interface;
-
-    interface->SetCanUseCJK(false);
-
     interface->RegisterUrgentLifeEventCallback(handle_urgent_life_event);
     interface->RegisterLoadingScreenCallback(handle_loading_screen);
     

@@ -5,6 +5,9 @@
 #include <iostream>
 #include <curl/curl.h>
 #include "network.hpp"
+#include <thread>
+
+NameGenerator *name_generator;
 
 template<typename ... Args>
 std::string string_format( const std::string& format, Args ... args )
@@ -41,17 +44,6 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
     mem->memory[mem->size] = 0;
 
     return realsize;
-}
-
-NameGenerator::NameGenerator()
-{
-    InitNetwork();
-    can_use_cjk = true;
-}
-
-NameGenerator::~NameGenerator()
-{
-    StopNetwork();
 }
 
 std::string placeholder_name(Nation nation, Gender gender, CURLcode code)
@@ -172,13 +164,10 @@ std::string loaded_full_name;
 bool used_up_first_name = true;
 bool used_up_last_name = true;
 
-std::string get_random_full_name(Nation nation, Gender gender, bool use_unicode)
+std::string get_random_full_name_network(Nation nation, Gender gender, bool use_unicode)
 {
     std::string url, gender_str, post_data;
     CURLcode res;
-
-    used_up_first_name = false;
-    used_up_last_name = false;
 
     struct MemoryStruct chunk;
     chunk.memory = (char *)malloc(1);
@@ -225,12 +214,78 @@ std::string get_random_full_name(Nation nation, Gender gender, bool use_unicode)
     return ret;
 }
 
+Nation home_nation;
+void name_idle_generator(std::vector<FullName> *list, bool *should_run, bool *use_unicode) {
+    NationGenerator *nation_generator = new NationGenerator;
+    while (*should_run)
+    {
+        FullName new_name;
+        if (rand() % 4 == 0)
+            new_name.nation = nation_generator->GetRandomNation();
+        else
+            new_name.nation = home_nation;
+        
+        if (rand() & 1)
+            new_name.gender = Gender::Male;
+        else
+            new_name.gender = Gender::Female;
+        
+        new_name.name = get_random_full_name_network(new_name.nation, new_name.gender, *use_unicode);
+
+        list->push_back(new_name);
+    }
+    delete nation_generator;
+}
+
+std::string NameGenerator::get_random_full_name(Nation nation, Gender gender)
+{
+    used_up_first_name = false;
+    used_up_last_name = false;
+    for (unsigned long i = 0; i < loaded_full_names.size(); i++)
+    {
+        if (loaded_full_names[i].gender == gender && loaded_full_names[i].nation.api_name == nation.api_name)
+        {
+            std::string ret = loaded_full_names[i].name;
+            loaded_full_names.erase(loaded_full_names.begin() + i);
+            return ret;
+        }
+    }
+    return get_random_full_name_network(nation, gender, can_use_cjk);
+}
+
+NameGenerator::NameGenerator(Nation nation)
+{
+    static bool there_is_another = false;
+    if (there_is_another)
+    {
+        throw new std::runtime_error("NameGenerator Mutex error");
+    }
+    there_is_another = true;
+    InitNetwork();
+    can_use_cjk = true;
+    home_nation = nation;
+    running = true;
+    name_generation_thread = std::thread(name_idle_generator, &loaded_full_names, &running, &can_use_cjk);
+}
+
+NameGenerator::~NameGenerator()
+{
+    StopNetwork();
+    running = false;
+    name_generation_thread.join();
+}
+
+void NameGenerator::SetCanUseCJK(bool can)
+{
+    can_use_cjk = can;
+}
+
 std::string NameGenerator::GetRandomFirstName(Nation nation, Gender gender)
 {
     std::string full_name = loaded_full_name;
     if (used_up_first_name)
     {
-        full_name = get_random_full_name(nation, gender, can_use_cjk);
+        full_name = get_random_full_name(nation, gender);
         loaded_full_name = full_name;
     }   
     char *str = full_name.data();
@@ -247,7 +302,7 @@ std::string NameGenerator::GetRandomLastName(Nation nation, Gender gender)
     std::string full_name = loaded_full_name;
     if (used_up_last_name)
     {
-        full_name = get_random_full_name(nation, gender, can_use_cjk);
+        full_name = get_random_full_name(nation, gender);
         loaded_full_name = full_name;
     }
     char *str = strchr(full_name.data(), ' ') + 1;

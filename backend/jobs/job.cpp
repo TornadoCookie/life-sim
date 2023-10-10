@@ -63,8 +63,3 @@ std::string Job::GetCompanyDetailsString()
 {
     return "Do this later.";
 }
-
-Job::Job()
-{
-    company.name_generator = new NameGenerator;
-}

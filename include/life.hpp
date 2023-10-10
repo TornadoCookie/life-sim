@@ -78,7 +78,6 @@ class PlayerLife : public Life {
 
     private:
     NationGenerator *nation_generator;
-    NameGenerator *name_generator;
     UrgentLifeEventLogger *urgent_life_event_logger;
     YearLogger *year_logger;
     Life *mother;
