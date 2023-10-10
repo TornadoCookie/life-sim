@@ -22,6 +22,7 @@ std::string string_format( const std::string& format, Args ... args )
 
 Interface::Interface()
 {
+    name_generator = new NameGenerator;
     year_logger = new YearLogger;
     urgent_life_event_logger = new UrgentLifeEventLogger;
     current_life = new PlayerLife(urgent_life_event_logger, year_logger);

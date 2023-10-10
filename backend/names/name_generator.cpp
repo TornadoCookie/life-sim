@@ -214,8 +214,7 @@ std::string get_random_full_name_network(Nation nation, Gender gender, bool use_
     return ret;
 }
 
-Nation home_nation;
-void name_idle_generator(std::vector<FullName> *list, bool *should_run, bool *use_unicode) {
+void name_idle_generator(std::vector<FullName> *list, bool *should_run, bool *use_unicode, Nation home_nation) {
     NationGenerator *nation_generator = new NationGenerator;
     while (*should_run)
     {
@@ -265,7 +264,20 @@ NameGenerator::NameGenerator(Nation nation)
     can_use_cjk = true;
     home_nation = nation;
     running = true;
-    name_generation_thread = std::thread(name_idle_generator, &loaded_full_names, &running, &can_use_cjk);
+    name_generation_thread = std::thread(name_idle_generator, &loaded_full_names, &running, &can_use_cjk, home_nation);
+}
+
+NameGenerator::NameGenerator()
+{
+    static bool there_is_another = false;
+    if (there_is_another)
+    {
+        throw new std::runtime_error("NameGenerator Mutex error");
+    }
+    there_is_another = true;
+    InitNetwork();
+    can_use_cjk = true;
+    running = false;
 }
 
 NameGenerator::~NameGenerator()
@@ -310,4 +322,17 @@ std::string NameGenerator::GetRandomLastName(Nation nation, Gender gender)
     used_up_last_name = true;
 
     return std::string(str);
+}
+
+void NameGenerator::SetHomeNation(Nation nation)
+{
+    home_nation = nation;
+    /* Reset name generation thread */
+    if (running)
+    {
+        running = false;
+        name_generation_thread.join();
+    }
+    running = true;
+    name_generation_thread = std::thread(name_idle_generator, &loaded_full_names, &running, &can_use_cjk, home_nation);
 }
