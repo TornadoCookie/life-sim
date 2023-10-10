@@ -5,12 +5,14 @@ int get_input(int default_option, int max_option)
 {
     char option;
 
-    std::cin >> option;
+    option = std::cin.get();
     if (option == '\n')
-        option = default_option;
+        return default_option;
     option -= '0';
     if (option > max_option)
-        option = default_option;
+        return default_option;
+
+    std::cin.get();
 
     return option;
 }
