@@ -17,6 +17,9 @@ lifesim_gui_SOURCES = \
 lifesim_gui_LDADD = $(LDADD) -lcurl $(srcdir)/raylib/raylib/libraylib.a
 lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/src
 
+$(srcdir)/raylib/raylib/libraylib.a: $(srcdir)/raylib/Makefile
+	$(MAKE) -C $(srcdir)/raylib
+
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
     $(srcdir)/backend/events/year_logger.cpp \

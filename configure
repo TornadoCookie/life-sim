@@ -4586,6 +4586,8 @@ then :
 fi
 
 
+
+
 ac_config_files="$ac_config_files Makefile"
 
 cat >confcache <<\_ACEOF
@@ -5863,6 +5865,7 @@ ac_clean_files=$ac_clean_files_save
 test $ac_write_fail = 0 ||
   as_fn_error $? "write failure creating $CONFIG_STATUS" "$LINENO" 5
 
+cmake ${srcdir}/raylib
 
 # configure is writing to config.log, and then calls config.status.
 # config.status does its own redirection, appending to config.log.
