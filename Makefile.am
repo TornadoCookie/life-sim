@@ -12,8 +12,10 @@ lifesim_terminal_LDADD = $(LDADD) -lcurl
 
 lifesim_gui_SOURCES = \
     $(srcdir)/frontend/gui/main.cpp \
-    $(srcdir)/include/interface.hpp
-lifesim_gui_LDADD = $(LDADD) -lcurl -lm -lraylib
+    $(srcdir)/include/interface.hpp \
+    $(srcdir)/raygui/src/raygui.h
+lifesim_gui_LDADD = $(LDADD) -lcurl $(srcdir)/raylib/raylib/libraylib.a
+lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/src
 
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \

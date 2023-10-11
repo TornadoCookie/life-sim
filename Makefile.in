@@ -124,9 +124,10 @@ am_liblife_a_OBJECTS = backend/events/urgent_life_event.$(OBJEXT) \
 	backend/network/network.$(OBJEXT) backend/jobs/job.$(OBJEXT) \
 	backend/jobs/company.$(OBJEXT) backend/jobs/employer.$(OBJEXT)
 liblife_a_OBJECTS = $(am_liblife_a_OBJECTS)
-am_lifesim_gui_OBJECTS = frontend/gui/main.$(OBJEXT)
+am_lifesim_gui_OBJECTS = frontend/gui/lifesim_gui-main.$(OBJEXT)
 lifesim_gui_OBJECTS = $(am_lifesim_gui_OBJECTS)
-lifesim_gui_DEPENDENCIES = $(LDADD)
+lifesim_gui_DEPENDENCIES = $(LDADD) \
+	$(srcdir)/raylib/raylib/libraylib.a
 am_lifesim_terminal_OBJECTS = frontend/terminal/main.$(OBJEXT)
 lifesim_terminal_OBJECTS = $(am_lifesim_terminal_OBJECTS)
 lifesim_terminal_DEPENDENCIES = $(LDADD)
@@ -155,9 +156,13 @@ am__depfiles_remade = backend/events/$(DEPDIR)/urgent_life_event.Po \
 	backend/nations/$(DEPDIR)/nation_generator.Po \
 	backend/network/$(DEPDIR)/network.Po \
 	backend/school/$(DEPDIR)/life_education.Po \
-	frontend/gui/$(DEPDIR)/main.Po \
+	frontend/gui/$(DEPDIR)/lifesim_gui-main.Po \
 	frontend/terminal/$(DEPDIR)/main.Po
 am__mv = mv -f
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 AM_V_CXX = $(am__v_CXX_@AM_V@)
@@ -343,9 +348,11 @@ lifesim_terminal_SOURCES = \
 lifesim_terminal_LDADD = $(LDADD) -lcurl
 lifesim_gui_SOURCES = \
     $(srcdir)/frontend/gui/main.cpp \
-    $(srcdir)/include/interface.hpp
+    $(srcdir)/include/interface.hpp \
+    $(srcdir)/raygui/src/raygui.h
 
-lifesim_gui_LDADD = $(LDADD) -lcurl -lm -lraylib
+lifesim_gui_LDADD = $(LDADD) -lcurl $(srcdir)/raylib/raylib/libraylib.a
+lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/src
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
     $(srcdir)/backend/events/year_logger.cpp \
@@ -534,7 +541,7 @@ frontend/gui/$(am__dirstamp):
 frontend/gui/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) frontend/gui/$(DEPDIR)
 	@: > frontend/gui/$(DEPDIR)/$(am__dirstamp)
-frontend/gui/main.$(OBJEXT): frontend/gui/$(am__dirstamp) \
+frontend/gui/lifesim_gui-main.$(OBJEXT): frontend/gui/$(am__dirstamp) \
 	frontend/gui/$(DEPDIR)/$(am__dirstamp)
 
 lifesim_gui$(EXEEXT): $(lifesim_gui_OBJECTS) $(lifesim_gui_DEPENDENCIES) $(EXTRA_lifesim_gui_DEPENDENCIES) 
@@ -580,7 +587,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@backend/nations/$(DEPDIR)/nation_generator.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@backend/network/$(DEPDIR)/network.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@backend/school/$(DEPDIR)/life_education.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@frontend/gui/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@frontend/gui/$(DEPDIR)/lifesim_gui-main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@frontend/terminal/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -604,6 +611,20 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+frontend/gui/lifesim_gui-main.o: frontend/gui/main.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lifesim_gui_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT frontend/gui/lifesim_gui-main.o -MD -MP -MF frontend/gui/$(DEPDIR)/lifesim_gui-main.Tpo -c -o frontend/gui/lifesim_gui-main.o `test -f 'frontend/gui/main.cpp' || echo '$(srcdir)/'`frontend/gui/main.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) frontend/gui/$(DEPDIR)/lifesim_gui-main.Tpo frontend/gui/$(DEPDIR)/lifesim_gui-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='frontend/gui/main.cpp' object='frontend/gui/lifesim_gui-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lifesim_gui_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o frontend/gui/lifesim_gui-main.o `test -f 'frontend/gui/main.cpp' || echo '$(srcdir)/'`frontend/gui/main.cpp
+
+frontend/gui/lifesim_gui-main.obj: frontend/gui/main.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lifesim_gui_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT frontend/gui/lifesim_gui-main.obj -MD -MP -MF frontend/gui/$(DEPDIR)/lifesim_gui-main.Tpo -c -o frontend/gui/lifesim_gui-main.obj `if test -f 'frontend/gui/main.cpp'; then $(CYGPATH_W) 'frontend/gui/main.cpp'; else $(CYGPATH_W) '$(srcdir)/frontend/gui/main.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) frontend/gui/$(DEPDIR)/lifesim_gui-main.Tpo frontend/gui/$(DEPDIR)/lifesim_gui-main.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='frontend/gui/main.cpp' object='frontend/gui/lifesim_gui-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lifesim_gui_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o frontend/gui/lifesim_gui-main.obj `if test -f 'frontend/gui/main.cpp'; then $(CYGPATH_W) 'frontend/gui/main.cpp'; else $(CYGPATH_W) '$(srcdir)/frontend/gui/main.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -910,7 +931,7 @@ distclean: distclean-am
 	-rm -f backend/nations/$(DEPDIR)/nation_generator.Po
 	-rm -f backend/network/$(DEPDIR)/network.Po
 	-rm -f backend/school/$(DEPDIR)/life_education.Po
-	-rm -f frontend/gui/$(DEPDIR)/main.Po
+	-rm -f frontend/gui/$(DEPDIR)/lifesim_gui-main.Po
 	-rm -f frontend/terminal/$(DEPDIR)/main.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -970,7 +991,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f backend/nations/$(DEPDIR)/nation_generator.Po
 	-rm -f backend/network/$(DEPDIR)/network.Po
 	-rm -f backend/school/$(DEPDIR)/life_education.Po
-	-rm -f frontend/gui/$(DEPDIR)/main.Po
+	-rm -f frontend/gui/$(DEPDIR)/lifesim_gui-main.Po
 	-rm -f frontend/terminal/$(DEPDIR)/main.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

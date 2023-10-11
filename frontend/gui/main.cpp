@@ -1,11 +1,11 @@
 #include "interface.hpp"
-#include <raylib.h>
 #include <iostream>
 
 #ifdef HAVE_LIBRAYLIB
 
 extern "C"
 {
+    #include <raylib.h>
     #define RAYGUI_IMPLEMENTATION
     #include "raygui.h"
 }

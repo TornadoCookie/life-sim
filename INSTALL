@@ -1,4 +1,11 @@
-To install, run configure:
+To build, make dependencies (debian):
+    $ apt install libcurl-dev
+(fedora):
+    $ dnf install libcurl-devel
+(arch):
+    $ pacman -S curl
+
+Then, run configure:
     $ ./configure
 Then, run make:
     $ make
