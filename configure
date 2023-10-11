@@ -4102,6 +4102,90 @@ then :
 
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ceil in -lm" >&5
+printf %s "checking for ceil in -lm... " >&6; }
+if test ${ac_cv_lib_m_ceil+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lm  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int ceil ();
+}
+int
+main (void)
+{
+return conftest::ceil ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_m_ceil=yes
+else $as_nop
+  ac_cv_lib_m_ceil=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_m_ceil" >&5
+printf "%s\n" "$ac_cv_lib_m_ceil" >&6; }
+if test "x$ac_cv_lib_m_ceil" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBM 1" >>confdefs.h
+
+  LIBS="-lm $LIBS"
+
+fi
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for InitWindow in -lraylib" >&5
+printf %s "checking for InitWindow in -lraylib... " >&6; }
+if test ${ac_cv_lib_raylib_InitWindow+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lraylib  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+namespace conftest {
+  extern "C" int InitWindow ();
+}
+int
+main (void)
+{
+return conftest::InitWindow ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"
+then :
+  ac_cv_lib_raylib_InitWindow=yes
+else $as_nop
+  ac_cv_lib_raylib_InitWindow=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_raylib_InitWindow" >&5
+printf "%s\n" "$ac_cv_lib_raylib_InitWindow" >&6; }
+if test "x$ac_cv_lib_raylib_InitWindow" = xyes
+then :
+  printf "%s\n" "#define HAVE_LIBRAYLIB 1" >>confdefs.h
+
+  LIBS="-lraylib $LIBS"
+
+fi
+
 
 # Checks for header files.
 

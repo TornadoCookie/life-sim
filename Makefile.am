@@ -1,14 +1,19 @@
-bin_PROGRAMS = lifesim
+bin_PROGRAMS = lifesim_terminal lifesim_gui
 noinst_LIBRARIES = liblife.a 
 
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I$(srcdir)/include -g -Wall
 
-lifesim_SOURCES = \
-    $(srcdir)/frontend/main.cpp \
+lifesim_terminal_SOURCES = \
+    $(srcdir)/frontend/terminal/main.cpp \
     $(srcdir)/include/interface.hpp
 
-lifesim_LDADD = $(LDADD) -lcurl
+lifesim_terminal_LDADD = $(LDADD) -lcurl
+
+lifesim_gui_SOURCES = \
+    $(srcdir)/frontend/gui/main.cpp \
+    $(srcdir)/include/interface.hpp
+lifesim_gui_LDADD = $(LDADD) -lcurl -lm -lraylib
 
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
