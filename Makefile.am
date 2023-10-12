@@ -1,5 +1,5 @@
 bin_PROGRAMS = lifesim_terminal lifesim_gui
-noinst_LIBRARIES = liblife.a 
+noinst_LIBRARIES = liblife.a $(srcdir)/raylib/raylib/libraylib.a
 
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I$(srcdir)/include -g -Wall
