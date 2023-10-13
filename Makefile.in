@@ -111,15 +111,9 @@ AM_V_AR = $(am__v_AR_@AM_V@)
 am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
 am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
-__srcdir__raylib_raylib_libraylib_a_AR = $(AR) $(ARFLAGS)
-__srcdir__raylib_raylib_libraylib_a_LIBADD =
-__srcdir__raylib_raylib_libraylib_a_SOURCES =  \
-	$(srcdir)/raylib/raylib/libraylib.c
-am__dirstamp = $(am__leading_dot)dirstamp
-__srcdir__raylib_raylib_libraylib_a_OBJECTS =  \
-	raylib/raylib/libraylib.$(OBJEXT)
 liblife_a_AR = $(AR) $(ARFLAGS)
 liblife_a_LIBADD =
+am__dirstamp = $(am__leading_dot)dirstamp
 am_liblife_a_OBJECTS = backend/events/urgent_life_event.$(OBJEXT) \
 	backend/events/year_logger.$(OBJEXT) \
 	backend/interface/interface.$(OBJEXT) \
@@ -163,21 +157,8 @@ am__depfiles_remade = backend/events/$(DEPDIR)/urgent_life_event.Po \
 	backend/network/$(DEPDIR)/network.Po \
 	backend/school/$(DEPDIR)/life_education.Po \
 	frontend/gui/$(DEPDIR)/lifesim_gui-main.Po \
-	frontend/terminal/$(DEPDIR)/main.Po \
-	raylib/raylib/$(DEPDIR)/libraylib.Po
+	frontend/terminal/$(DEPDIR)/main.Po
 am__mv = mv -f
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-AM_V_CC = $(am__v_CC_@AM_V@)
-am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
-am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
-CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CCLD = $(am__v_CCLD_@AM_V@)
-am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
-am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -195,10 +176,21 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(srcdir)/raylib/raylib/libraylib.c $(liblife_a_SOURCES) \
-	$(lifesim_gui_SOURCES) $(lifesim_terminal_SOURCES)
-DIST_SOURCES = $(srcdir)/raylib/raylib/libraylib.c \
-	$(liblife_a_SOURCES) $(lifesim_gui_SOURCES) \
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
+SOURCES = $(liblife_a_SOURCES) $(lifesim_gui_SOURCES) \
+	$(lifesim_terminal_SOURCES)
+DIST_SOURCES = $(liblife_a_SOURCES) $(lifesim_gui_SOURCES) \
 	$(lifesim_terminal_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -350,7 +342,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-noinst_LIBRARIES = liblife.a $(srcdir)/raylib/raylib/libraylib.a
+noinst_LIBRARIES = liblife.a
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I$(srcdir)/include -g -Wall
 lifesim_terminal_SOURCES = \
@@ -389,7 +381,7 @@ liblife_a_SOURCES = \
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .cpp .o .obj
+.SUFFIXES: .cpp .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -468,17 +460,6 @@ clean-binPROGRAMS:
 
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-raylib/raylib/$(am__dirstamp):
-	@$(MKDIR_P) raylib/raylib
-	@: > raylib/raylib/$(am__dirstamp)
-raylib/raylib/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) raylib/raylib/$(DEPDIR)
-	@: > raylib/raylib/$(DEPDIR)/$(am__dirstamp)
-raylib/raylib/libraylib.$(OBJEXT): raylib/raylib/$(am__dirstamp) \
-	raylib/raylib/$(DEPDIR)/$(am__dirstamp)
-$(srcdir)/raylib/raylib/$(am__dirstamp):
-	@$(MKDIR_P) $(srcdir)/raylib/raylib
-	@: > $(srcdir)/raylib/raylib/$(am__dirstamp)
 backend/events/$(am__dirstamp):
 	@$(MKDIR_P) backend/events
 	@: > backend/events/$(am__dirstamp)
@@ -595,7 +576,6 @@ mostlyclean-compile:
 	-rm -f backend/school/*.$(OBJEXT)
 	-rm -f frontend/gui/*.$(OBJEXT)
 	-rm -f frontend/terminal/*.$(OBJEXT)
-	-rm -f raylib/raylib/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -613,29 +593,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@backend/school/$(DEPDIR)/life_education.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@frontend/gui/$(DEPDIR)/lifesim_gui-main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@frontend/terminal/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@raylib/raylib/$(DEPDIR)/libraylib.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
 	@echo '# dummy' >$@-t && $(am__mv) $@-t $@
 
 am--depfiles: $(am__depfiles_remade)
-
-.c.o:
-@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ $<
-
-.c.obj:
-@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
-@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
-@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -950,9 +913,6 @@ distclean-generic:
 	-rm -f frontend/gui/$(am__dirstamp)
 	-rm -f frontend/terminal/$(DEPDIR)/$(am__dirstamp)
 	-rm -f frontend/terminal/$(am__dirstamp)
-	-rm -f raylib/raylib/$(DEPDIR)/$(am__dirstamp)
-	-rm -f raylib/raylib/$(am__dirstamp)
-	-test -z "$(srcdir)/raylib/raylib/$(am__dirstamp)" || rm -f $(srcdir)/raylib/raylib/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -977,7 +937,6 @@ distclean: distclean-am
 	-rm -f backend/school/$(DEPDIR)/life_education.Po
 	-rm -f frontend/gui/$(DEPDIR)/lifesim_gui-main.Po
 	-rm -f frontend/terminal/$(DEPDIR)/main.Po
-	-rm -f raylib/raylib/$(DEPDIR)/libraylib.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -1038,7 +997,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f backend/school/$(DEPDIR)/life_education.Po
 	-rm -f frontend/gui/$(DEPDIR)/lifesim_gui-main.Po
 	-rm -f frontend/terminal/$(DEPDIR)/main.Po
-	-rm -f raylib/raylib/$(DEPDIR)/libraylib.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1080,6 +1038,7 @@ uninstall-am: uninstall-binPROGRAMS
 
 $(srcdir)/raylib/raylib/libraylib.a: $(srcdir)/raylib/Makefile
 	$(MAKE) -C $(srcdir)/raylib
+	ls $(srcdir)/raylib/raylib
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

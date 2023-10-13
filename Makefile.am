@@ -1,5 +1,5 @@
 bin_PROGRAMS = lifesim_terminal lifesim_gui
-noinst_LIBRARIES = liblife.a $(srcdir)/raylib/raylib/libraylib.a
+noinst_LIBRARIES = liblife.a
 
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I$(srcdir)/include -g -Wall
@@ -19,6 +19,7 @@ lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/
 
 $(srcdir)/raylib/raylib/libraylib.a: $(srcdir)/raylib/Makefile
 	$(MAKE) -C $(srcdir)/raylib
+	ls $(srcdir)/raylib/raylib
 
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
