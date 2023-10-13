@@ -1038,6 +1038,11 @@ uninstall-am: uninstall-binPROGRAMS
 
 $(srcdir)/raylib/raylib/libraylib.a: $(srcdir)/raylib/Makefile
 	$(MAKE) -C $(srcdir)/raylib
+	echo "srcdir:"
+	ls $(srcdir)
+	echo "srcdir/raylib:"
+	ls $(srcdir)/raylib
+	echo "srcdir/raylib/raylib:"
 	ls $(srcdir)/raylib/raylib
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

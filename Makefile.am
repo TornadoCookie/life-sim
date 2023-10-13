@@ -19,9 +19,12 @@ lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/
 
 $(srcdir)/raylib/raylib/libraylib.a: $(srcdir)/raylib/Makefile
 	$(MAKE) -C $(srcdir)/raylib
-	ls $(srcdir)/raylib
-	ls $(srcdir)/raylib/raylib
+	echo "srcdir:"
 	ls $(srcdir)
+	echo "srcdir/raylib:"
+	ls $(srcdir)/raylib
+	echo "srcdir/raylib/raylib:"
+	ls $(srcdir)/raylib/raylib
 
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
