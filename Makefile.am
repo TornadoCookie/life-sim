@@ -14,18 +14,11 @@ lifesim_gui_SOURCES = \
     $(srcdir)/frontend/gui/main.cpp \
     $(srcdir)/include/interface.hpp \
     $(srcdir)/raygui/src/raygui.h
-lifesim_gui_LDADD = $(LDADD) -lcurl $(srcdir)/raylib/raylib/libraylib.a
+lifesim_gui_LDADD = $(LDADD) -lcurl ./raylib/libraylib.a
 lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/src
 
-#For some reason, raylib can either put libraylib.a in $(srcdir)/raylib/libraylib.a OR $(srcdir)/raylib/raylib/libraylib.a 
-$(srcdir)/raylib/libraylib.a: $(srcdir)/raylib/Makefile
-	$(MAKE) -C $(srcdir)/raylib
-	if [ -e $(srcdir)/raylib/raylib/libraylib.a ]; then mv $(srcdir)/raylib/raylib/libraylib.a $(srcdir)/raylib/libraylib.a; fi;
-
-$(srcdir)/raylib/raylib/libraylib.a: $(srcdir)/raylib/Makefile
-	mkdir -p $(srcdir)/raylib/raylib
-	$(MAKE) -C $(srcdir)/raylib
-	if [ -e $(srcdir)/raylib/libraylib.a ]; then mv $(srcdir)/raylib/libraylib.a $(srcdir)/raylib/raylib/libraylib.a; fi;
+./raylib/libraylib.a: ./raylib/Makefile
+	$(MAKE) -C ./raylib
 
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
