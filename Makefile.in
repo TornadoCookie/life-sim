@@ -15,6 +15,7 @@
 @SET_MAKE@
 
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -96,13 +97,13 @@ am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
-	$(am__configure_deps) $(am__DIST_COMMON)
+	$(am__configure_deps) $(dist_data_DATA) $(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)"
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(datadir)"
 PROGRAMS = $(bin_PROGRAMS)
 LIBRARIES = $(noinst_LIBRARIES)
 AR = ar
@@ -126,7 +127,7 @@ am_liblife_a_OBJECTS = backend/events/urgent_life_event.$(OBJEXT) \
 liblife_a_OBJECTS = $(am_liblife_a_OBJECTS)
 am_lifesim_gui_OBJECTS = frontend/gui/lifesim_gui-main.$(OBJEXT)
 lifesim_gui_OBJECTS = $(am_lifesim_gui_OBJECTS)
-lifesim_gui_DEPENDENCIES = $(LDADD) ./raylib/libraylib.a
+lifesim_gui_DEPENDENCIES = $(LDADD) $(builddir)/raylib/libraylib.a
 am_lifesim_terminal_OBJECTS = frontend/terminal/main.$(OBJEXT)
 lifesim_terminal_OBJECTS = $(am_lifesim_terminal_OBJECTS)
 lifesim_terminal_DEPENDENCIES = $(LDADD)
@@ -196,6 +197,34 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
+am__install_max = 40
+am__nobase_strip_setup = \
+  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
+am__nobase_strip = \
+  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
+am__nobase_list = $(am__nobase_strip_setup); \
+  for p in $$list; do echo "$$p $$p"; done | \
+  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
+  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
+    if (++n[$$2] == $(am__install_max)) \
+      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
+    END { for (dir in files) print dir, files[dir] }'
+am__base_list = \
+  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
+  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
+am__uninstall_files_from_dir = { \
+  test -z "$$files" \
+    || { test ! -d "$$dir" && test ! -f "$$dir" && test ! -r "$$dir"; } \
+    || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
+         $(am__cd) "$$dir" && rm -f $$files; }; \
+  }
+DATA = $(dist_data_DATA) $(noinst_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -354,8 +383,12 @@ lifesim_gui_SOURCES = \
     $(srcdir)/include/interface.hpp \
     $(srcdir)/raygui/src/raygui.h
 
-lifesim_gui_LDADD = $(LDADD) -lcurl ./raylib/libraylib.a
+lifesim_gui_LDADD = $(LDADD) -lcurl $(builddir)/raylib/libraylib.a
 lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/src
+
+# Include raylib sources in dist
+dist_data_DATA = $(srcdir)/raylib/*
+noinst_DATA = $(srcdir)/raylib/*
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
     $(srcdir)/backend/events/year_logger.cpp \
@@ -628,6 +661,27 @@ frontend/gui/lifesim_gui-main.obj: frontend/gui/main.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='frontend/gui/main.cpp' object='frontend/gui/lifesim_gui-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lifesim_gui_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o frontend/gui/lifesim_gui-main.obj `if test -f 'frontend/gui/main.cpp'; then $(CYGPATH_W) 'frontend/gui/main.cpp'; else $(CYGPATH_W) '$(srcdir)/frontend/gui/main.cpp'; fi`
+install-dist_dataDATA: $(dist_data_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_data_DATA)'; test -n "$(datadir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(datadir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(datadir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(datadir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(datadir)" || exit $$?; \
+	done
+
+uninstall-dist_dataDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_data_DATA)'; test -n "$(datadir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(datadir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -861,9 +915,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS) $(LIBRARIES)
+all-am: Makefile $(PROGRAMS) $(LIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(datadir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -952,7 +1006,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-dist_dataDATA
 
 install-dvi: install-dvi-am
 
@@ -1011,7 +1065,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS
+uninstall-am: uninstall-binPROGRAMS uninstall-dist_dataDATA
 
 .MAKE: install-am install-strip
 
@@ -1023,20 +1077,26 @@ uninstall-am: uninstall-binPROGRAMS
 	distclean-compile distclean-generic distclean-tags \
 	distcleancheck distdir distuninstallcheck dvi dvi-am html \
 	html-am info info-am install install-am install-binPROGRAMS \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-binPROGRAMS
+	install-data install-data-am install-dist_dataDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-dist_dataDATA
 
 .PRECIOUS: Makefile
 
 
-./raylib/libraylib.a: ./raylib/Makefile
-	$(MAKE) -C ./raylib
+dist_hook:
+	rm -rf $(distdir)/raylib/examples
+	rm -rf $(distdir)/raylib/projects
+	rm -rf $(distdir)/raylib/parser
+
+$(builddir)/raylib/libraylib.a: $(builddir)/raylib/Makefile
+	$(MAKE) -C $(builddir)/raylib
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

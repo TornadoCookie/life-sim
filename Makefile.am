@@ -14,11 +14,20 @@ lifesim_gui_SOURCES = \
     $(srcdir)/frontend/gui/main.cpp \
     $(srcdir)/include/interface.hpp \
     $(srcdir)/raygui/src/raygui.h
-lifesim_gui_LDADD = $(LDADD) -lcurl ./raylib/libraylib.a
+lifesim_gui_LDADD = $(LDADD) -lcurl $(builddir)/raylib/libraylib.a
 lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/src
 
-./raylib/libraylib.a: ./raylib/Makefile
-	$(MAKE) -C ./raylib
+# Include raylib sources in dist
+dist_data_DATA = $(srcdir)/raylib/*
+noinst_DATA = $(srcdir)/raylib/*
+
+dist_hook:
+	rm -rf $(distdir)/raylib/examples
+	rm -rf $(distdir)/raylib/projects
+	rm -rf $(distdir)/raylib/parser
+
+$(builddir)/raylib/libraylib.a: $(builddir)/raylib/Makefile
+	$(MAKE) -C $(builddir)/raylib
 
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \

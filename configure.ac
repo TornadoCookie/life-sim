@@ -32,7 +32,7 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([strchr strstr])
 
-AC_CONFIG_COMMANDS_POST([cmake ${srcdir}/raylib])
+AC_CONFIG_COMMANDS_PRE([cmake ${srcdir}/raylib -DBUILD_EXAMPLES=OFF])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
