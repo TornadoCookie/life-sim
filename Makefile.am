@@ -17,14 +17,12 @@ lifesim_gui_SOURCES = \
 lifesim_gui_LDADD = $(LDADD) -lcurl $(srcdir)/raylib/raylib/libraylib.a
 lifesim_gui_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/raylib/src -I$(srcdir)/raygui/src
 
-$(srcdir)/raylib/raylib/libraylib.a: $(srcdir)/raylib/Makefile
+$(srcdir)/raylib/libraylib.a: $(srcdir)/raylib/Makefile
 	$(MAKE) -C $(srcdir)/raylib
-	echo "srcdir:"
-	ls $(srcdir)
-	echo "srcdir/raylib:"
-	ls $(srcdir)/raylib
-	echo "srcdir/raylib/raylib:"
-	ls $(srcdir)/raylib/raylib
+
+$(srcdir)/raylib/raylib/libraylib.a: $(srcdir)/raylib/Makefile
+	mkdir -p $(srcdir)/raylib/raylib
+	if ! [ -e $(srcdir)/raylib/libraylib.a ]; then $(MAKE) -C $(srcdir)/raylib; fi;
 
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
