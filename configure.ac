@@ -32,7 +32,11 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([strchr strstr])
 
-AC_CONFIG_COMMANDS_PRE([cmake ${srcdir}/raylib -DBUILD_EXAMPLES=OFF])
+AC_ARG_ENABLE([gui], AS_HELP_STRING([--disable-gui], [Disable building a GUI using raylib]))
+
+AS_IF([test "x$enable_gui" != "xno"], [
+  AC_CONFIG_COMMANDS([raylib], [cmake ${srcdir}/raylib -DBUILD_EXAMPLES=OFF])
+])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

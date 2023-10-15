@@ -758,6 +758,7 @@ ac_user_opts='
 enable_option_checking
 enable_silent_rules
 enable_dependency_tracking
+enable_gui
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1403,6 +1404,7 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
+  --disable-gui           Disable building a GUI using raylib
 
 Some influential environment variables:
   CC          C compiler command
@@ -5873,7 +5875,20 @@ then :
 fi
 
 
+# Check whether --enable-gui was given.
+if test ${enable_gui+y}
+then :
+  enableval=$enable_gui;
+fi
 
+
+if test "x$enable_gui" != "xno"
+then :
+
+  ac_config_commands="$ac_config_commands raylib"
+
+
+fi
 
 ac_config_files="$ac_config_files Makefile"
 
@@ -6050,7 +6065,6 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-cmake ${srcdir}/raylib -DBUILD_EXAMPLES=OFF
 
 : "${CONFIG_STATUS=./config.status}"
 ac_write_fail=0
@@ -6619,6 +6633,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
+    "raylib") CONFIG_COMMANDS="$CONFIG_COMMANDS raylib" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -7145,6 +7160,7 @@ See \`config.log' for more details" "$LINENO" 5; }
   rm -f conftest-deps.mk
 }
  ;;
+    "raylib":C) cmake ${srcdir}/raylib -DBUILD_EXAMPLES=OFF ;;
 
   esac
 done # for ac_tag
