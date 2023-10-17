@@ -19,7 +19,6 @@ AC_PROG_MKDIR_P
 # Checks for libraries.
 AC_CHECK_LIB([curl], [curl_easy_init])
 AC_CHECK_LIB([m], [ceil])
-AC_CHECK_LIB([raylib], [InitWindow])
 
 # Checks for header files.
 

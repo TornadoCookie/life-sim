@@ -1,8 +1,6 @@
 #include "interface.hpp"
 #include <iostream>
 
-#ifdef HAVE_LIBRAYLIB
-
 extern "C"
 {
     #include <raylib.h>
@@ -98,14 +96,3 @@ int main()
     }
     return 0;
 }
-
-#else
-
-int main()
-{
-    std::cout << PACKAGE_NAME << " was compiled without raylib support.\n";
-    std::cout << "Please install raylib from your package manager or build it from source, then recompile." << std::endl;
-    return 0;
-}
- 
-#endif
