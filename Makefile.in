@@ -1097,6 +1097,7 @@ dist_hook:
 
 $(builddir)/raylib/libraylib.a: $(builddir)/raylib/Makefile
 	$(MAKE) -C $(builddir)/raylib
+	if [ -e $(builddir)/raylib/raylib/libraylib.a ]; then cp $(builddir)/raylib/raylib/libraylib.a $(builddir)/raylib/libraylib.a; fi
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

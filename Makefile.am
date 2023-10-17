@@ -28,6 +28,7 @@ dist_hook:
 
 $(builddir)/raylib/libraylib.a: $(builddir)/raylib/Makefile
 	$(MAKE) -C $(builddir)/raylib
+	if [ -e $(builddir)/raylib/raylib/libraylib.a ]; then cp $(builddir)/raylib/raylib/libraylib.a $(builddir)/raylib/libraylib.a; fi
 
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
