@@ -7118,7 +7118,7 @@ See \`config.log' for more details" "$LINENO" 5; }
   rm -f conftest-deps.mk
 }
  ;;
-    "raylib":C) mkdir -p raylib; cmake -S ${srcdir}/raylib -DBUILD_EXAMPLES=OFF -B raylib ;;
+    "raylib":C) cmake -S ${srcdir}/raylib -B raylib -DBUILD_EXAMPLES=OFF ;;
 
   esac
 done # for ac_tag

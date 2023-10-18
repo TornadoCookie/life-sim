@@ -34,7 +34,7 @@ AC_CHECK_FUNCS([strchr strstr])
 AC_ARG_ENABLE([gui], AS_HELP_STRING([--disable-gui], [Disable building a GUI using raylib]))
 
 AS_IF([test "x$enable_gui" != "xno"], [
-  AC_CONFIG_COMMANDS([raylib], [mkdir -p raylib; cmake -S ${srcdir}/raylib -DBUILD_EXAMPLES=OFF -B raylib])
+  AC_CONFIG_COMMANDS([raylib], [cmake -S ${srcdir}/raylib -B raylib -DBUILD_EXAMPLES=OFF])
 ])
 
 AC_CONFIG_FILES([Makefile])
