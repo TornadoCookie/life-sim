@@ -972,8 +972,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-noinstLIBRARIES \
-	mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-local \
+	clean-noinstLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -1071,10 +1071,10 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_dataDATA
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles am--refresh check \
 	check-am clean clean-binPROGRAMS clean-cscope clean-generic \
-	clean-noinstLIBRARIES cscope cscopelist-am ctags ctags-am dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip dist-zstd distcheck distclean \
-	distclean-compile distclean-generic distclean-tags \
+	clean-local clean-noinstLIBRARIES cscope cscopelist-am ctags \
+	ctags-am dist dist-all dist-bzip2 dist-gzip dist-lzip \
+	dist-shar dist-tarZ dist-xz dist-zip dist-zstd distcheck \
+	distclean distclean-compile distclean-generic distclean-tags \
 	distcleancheck distdir distuninstallcheck dvi dvi-am html \
 	html-am info info-am install install-am install-binPROGRAMS \
 	install-data install-data-am install-dist_dataDATA install-dvi \
@@ -1098,6 +1098,9 @@ dist_hook:
 $(builddir)/raylib/libraylib.a: $(builddir)/raylib/Makefile
 	$(MAKE) -C $(builddir)/raylib
 	if [ -e $(builddir)/raylib/raylib/libraylib.a ]; then cp $(builddir)/raylib/raylib/libraylib.a $(builddir)/raylib/libraylib.a; fi
+
+clean-local:
+	$(MAKE) -C $(builddir)/raylib clean
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

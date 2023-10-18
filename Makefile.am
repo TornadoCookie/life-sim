@@ -30,6 +30,9 @@ $(builddir)/raylib/libraylib.a: $(builddir)/raylib/Makefile
 	$(MAKE) -C $(builddir)/raylib
 	if [ -e $(builddir)/raylib/raylib/libraylib.a ]; then cp $(builddir)/raylib/raylib/libraylib.a $(builddir)/raylib/libraylib.a; fi
 
+clean-local:
+	$(MAKE) -C $(builddir)/raylib clean
+
 liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
     $(srcdir)/backend/events/year_logger.cpp \
