@@ -1,5 +1,6 @@
 #include "interface.hpp"
 #include <iostream>
+#include <getopt.h>
 
 int get_input(int default_option, int max_option)
 {
@@ -312,14 +313,72 @@ void start_over(Interface *interface)
     }
 }
 
-int main()
+void help()
 {
-    Interface *interface = new Interface;
+    std::cout << PACKAGE_STRING << "\n";
+    std::cout << "--help, -h: Show this help menu.\n--regen-names, -r: Regenerate the name list.\n--offline: Don't poll the internet for new names." << std::endl;
+    exit(EXIT_SUCCESS);
+}
 
+bool regenerate_names = false;
+bool is_offline = false;
+
+void handle_long_arg(std::string arg)
+{
+    if (arg == "regen-names")
+    {
+        regenerate_names = true;
+    }
+    else if (arg == "help")
+    {
+        help();
+    }
+    else if (arg == "offline")
+    {
+        is_offline = true;
+    }
+}
+
+int main(int argc, char **argv)
+{
+    Interface *interface;
+    
+    int c;
+
+    while (1)
+    {
+        int option_index = 0;
+
+        static struct option long_options[] = {
+            {"regen-names", no_argument, 0, 'r'},
+            {"help", no_argument, 0, 'h'},
+            {"offline", no_argument, 0, 0},
+            {0, 0, 0, 0}
+        };
+
+        c = getopt_long(argc, argv, "hr", long_options, &option_index);
+
+        if (c == -1) break;
+
+        switch(c)
+        {
+            case 0: handle_long_arg(std::string(long_options[option_index].name)); break;
+            case '?':
+            case 'h': help(); break;
+            case 'r': regenerate_names = true; break;
+        }
+    }
+
+    interface = new Interface;
+
+    interface->SetIsOffline(is_offline);
     interface->SetCanUseCJK(false);
     interface->RegisterUrgentLifeEventCallback(handle_urgent_life_event);
     interface->RegisterLoadingScreenCallback(handle_loading_screen);
-    
+
+    if (regenerate_names)
+        interface->RefreshNameList();
+
     start_over(interface);
 
     return 0;
