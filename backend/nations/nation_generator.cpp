@@ -30,3 +30,8 @@ Nation NationGenerator::GetRandomNation()
 {
     return nations[rand() % nations.size()];
 }
+
+std::vector<Nation> NationGenerator::GetNationList()
+{
+    return nations;
+}

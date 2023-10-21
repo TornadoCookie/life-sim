@@ -17,6 +17,7 @@ class NationGenerator {
     public:
     NationGenerator();
     Nation GetRandomNation();
+    std::vector<Nation> GetNationList();
 
     private:
     std::vector<Nation> loaded_nations;
