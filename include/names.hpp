@@ -27,14 +27,15 @@ class NameGenerator {
     std::string GetRandomLastName(Nation nation, Gender gender);
     void SetCanUseCJK(bool can);
     void SetHomeNation(Nation nation);
+    void NameListFullRefresh();
+    void SetOfflineMode(bool offline);
 
     private:
     std::string get_random_full_name(Nation nation, Gender gender);
     std::vector<FullName> loaded_full_names;
-    std::thread name_generation_thread;
     bool running;
     bool can_use_cjk;
-    Nation home_nation;
+    bool offline_mode;
 };
 
 extern NameGenerator *name_generator;

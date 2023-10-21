@@ -6,6 +6,9 @@
 #include <curl/curl.h>
 #include "network.hpp"
 #include <thread>
+#include <fstream>
+#include <sstream>
+#include <sys/stat.h>
 
 NameGenerator *name_generator;
 
@@ -76,6 +79,9 @@ CURLcode make_request(std::string url, std::string post_data, struct MemoryStruc
     if (res) return res;
 
     res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)chunk);
+    if (res) return res;
+
+    res = curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
     if (res) return res;
 
     if (is_json)
@@ -214,25 +220,106 @@ std::string get_random_full_name_network(Nation nation, Gender gender, bool use_
     return ret;
 }
 
-void name_idle_generator(std::vector<FullName> *list, bool *should_run, bool *use_unicode, Nation home_nation) {
-    NationGenerator *nation_generator = new NationGenerator;
-    while (*should_run)
-    {
-        FullName new_name;
-        if (rand() % 4 == 0)
-            new_name.nation = nation_generator->GetRandomNation();
-        else
-            new_name.nation = home_nation;
-        
-        if (rand() & 1)
-            new_name.gender = Gender::Male;
-        else
-            new_name.gender = Gender::Female;
-        
-        new_name.name = get_random_full_name_network(new_name.nation, new_name.gender, *use_unicode);
+void init_name_lists(std::vector<FullName> *list)
+{
+    NationGenerator n_generator;
+    std::vector<Nation> nation_list = n_generator.GetNationList();
+    std::ifstream name_list_file_fd;
+    Nation current_nation;
+    Gender current_gender;
+    bool is_in_last_names = false;
+    std::string token, line;
 
-        list->push_back(new_name);
+    std::map<std::string, std::vector<std::string>> male_first_names, female_first_names, last_names;
+
+    std::cout << "Loading name list..." << std::endl;
+
+    name_list_file_fd.open("name_list.txt");
+
+    while (std::getline(name_list_file_fd, line))
+    {
+        std::stringstream name_list_file(line);
+        name_list_file >> token;
+        if (token == "nation")
+        {
+            name_list_file >> token;
+            for (int i = 0; i < nation_list.size(); i++)
+                if (nation_list[i].api_name == token)
+                    current_nation = nation_list[i];
+        }
+        else if (token == "gender")
+        {
+            is_in_last_names = false;
+            name_list_file >> token;
+            if (token == "male")
+                current_gender = Gender::Male;
+            else
+                current_gender = Gender::Female;
+        }
+        else if (token == "last")
+        {
+            name_list_file >> token;
+            is_in_last_names = true;
+        }
+        else
+        {
+            std::string result = token;
+            while (name_list_file >> token)
+                result.append(token);
+            if (is_in_last_names)
+                last_names[current_nation.api_name].push_back(result);
+            else if (current_gender == Gender::Male)
+                male_first_names[current_nation.api_name].push_back(result);
+            else if (current_gender == Gender::Female)
+                female_first_names[current_nation.api_name].push_back(result);
+        }
     }
+
+    name_list_file_fd.close();
+
+    std::cout << "Building name tree..." << std::endl;
+
+    for (int i = 0; i < nation_list.size(); i++)
+    {
+        Nation nation = nation_list[i];
+        for (int j = 0; j < male_first_names[nation.api_name].size(); j++)
+        {
+            for (int k = 0; k < last_names[nation.api_name].size(); k++)
+            {
+                FullName new_full_name;
+                new_full_name.gender = Gender::Male;
+                new_full_name.nation = nation;
+                new_full_name.name = male_first_names[nation.api_name][j];
+                new_full_name.name.append(" ");
+                new_full_name.name.append(last_names[nation.api_name][k]);
+                list->push_back(new_full_name);
+            }
+        }
+        for (int j = 0; j < female_first_names[nation.api_name].size(); j++)
+        {
+            for (int k = 0; k < last_names[nation.api_name].size(); k++)
+            {
+                FullName new_full_name;
+                new_full_name.gender = Gender::Female;
+                new_full_name.nation = nation;
+                new_full_name.name = female_first_names[nation.api_name][j];
+                new_full_name.name.append(" ");
+                new_full_name.name.append(last_names[nation.api_name][k]);
+                list->push_back(new_full_name);
+            }
+        }
+    }
+
+    std::cout << "We have " << list->size() << " names in total." << std::endl;
+}
+
+void regen_name(std::vector<FullName> *list, bool use_unicode, int i) {
+    NationGenerator *nation_generator = new NationGenerator;
+    FullName new_name;
+    new_name.gender = list->at(i).gender;
+    new_name.nation = list->at(i).nation;
+    new_name.name = get_random_full_name_network(new_name.nation, new_name.gender, use_unicode);
+    list->at(i) = new_name;
     delete nation_generator;
 }
 
@@ -245,12 +332,16 @@ std::string NameGenerator::get_random_full_name(Nation nation, Gender gender)
         if (loaded_full_names[i].gender == gender && loaded_full_names[i].nation.api_name == nation.api_name)
         {
             std::string ret = loaded_full_names[i].name;
-            loaded_full_names.erase(loaded_full_names.begin() + i);
+            if (!offline_mode)
+                std::thread *t = new std::thread(regen_name, &loaded_full_names, can_use_cjk, i);
             return ret;
         }
     }
+    std::cout << "somehow did not find a name" << std::endl;
     return get_random_full_name_network(nation, gender, can_use_cjk);
 }
+
+struct stat statbuf;
 
 NameGenerator::NameGenerator(Nation nation)
 {
@@ -260,11 +351,12 @@ NameGenerator::NameGenerator(Nation nation)
         throw new std::runtime_error("NameGenerator Mutex error");
     }
     there_is_another = true;
+    offline_mode = false;
     InitNetwork();
     can_use_cjk = true;
-    home_nation = nation;
     running = true;
-    name_generation_thread = std::thread(name_idle_generator, &loaded_full_names, &running, &can_use_cjk, home_nation);
+    if (stat(std::string("name_list.txt").c_str(), &statbuf)) NameListFullRefresh();
+    init_name_lists(&loaded_full_names);
 }
 
 NameGenerator::NameGenerator()
@@ -275,16 +367,18 @@ NameGenerator::NameGenerator()
         throw new std::runtime_error("NameGenerator Mutex error");
     }
     there_is_another = true;
+    offline_mode = false;
     InitNetwork();
     can_use_cjk = true;
     running = false;
+    if (stat(std::string("name_list.txt").c_str(), &statbuf)) NameListFullRefresh();
+    init_name_lists(&loaded_full_names);
 }
 
 NameGenerator::~NameGenerator()
 {
     StopNetwork();
     running = false;
-    name_generation_thread.join();
 }
 
 void NameGenerator::SetCanUseCJK(bool can)
@@ -324,15 +418,78 @@ std::string NameGenerator::GetRandomLastName(Nation nation, Gender gender)
     return std::string(str);
 }
 
+const int names_per_gender_per_nation = 5;
+
+void NameGenerator::NameListFullRefresh()
+{
+    std::ofstream name_list_file;
+    NationGenerator temp_generator;
+    std::vector<Nation> nation_list = temp_generator.GetNationList();
+
+    if (offline_mode)
+    {
+        std::cerr << "Error: Can't refresh name list in offline mode." << std::endl;
+        return;
+    }
+
+    name_list_file.open("name_list.txt");
+
+    for (int i = 0; i < nation_list.size(); i++)
+    {
+        std::cout << "nation " << i << " / " << nation_list.size() << std::endl;
+        Nation nation = nation_list[i];
+        name_list_file << "nation " << nation.api_name << "\n";
+
+        std::vector<std::string> male_names, female_names, last_names;
+
+        /* We can use .reserve() here because we do not expect the size of the vector to change */
+        male_names.reserve(names_per_gender_per_nation);
+        female_names.reserve(names_per_gender_per_nation);
+        last_names.reserve(names_per_gender_per_nation * 2);
+
+        for (int j = 0; j < names_per_gender_per_nation; j++)
+        {
+            std::cout << "name  " << j << " / " << names_per_gender_per_nation << std::endl;
+            std::string male_name = get_random_full_name_network(nation, Gender::Male, can_use_cjk);
+            std::string female_name = get_random_full_name_network(nation, Gender::Female, can_use_cjk);
+
+            male_names.push_back(male_name.substr(0, male_name.find(' ')));
+            female_names.push_back(female_name.substr(0, female_name.find(' ')));
+
+            last_names.push_back(std::string(strchr(male_name.c_str(), ' ') + 1));
+            last_names.push_back(std::string(strchr(female_name.c_str(), ' ') + 1));
+        }
+
+        name_list_file << "gender male\n";
+        for (int j = 0; j < male_names.size(); j++)
+        {
+            name_list_file << male_names[j] << "\n";
+        }
+
+        name_list_file << "gender female\n";
+        for (int j = 0; j < female_names.size(); j++)
+        {
+            name_list_file << female_names[j] << "\n";
+        }
+
+        name_list_file << "last names\n";
+        for (int j = 0; j < female_names.size() + male_names.size(); j++)
+        {
+            name_list_file << last_names[j] << "\n";
+        }
+
+        name_list_file.flush();
+    }
+
+    name_list_file.close();
+}
+
+void NameGenerator::SetOfflineMode(bool offline)
+{
+    offline_mode = offline;
+}
+
 void NameGenerator::SetHomeNation(Nation nation)
 {
-    home_nation = nation;
-    /* Reset name generation thread */
-    if (running)
-    {
-        running = false;
-        name_generation_thread.join();
-    }
-    running = true;
-    name_generation_thread = std::thread(name_idle_generator, &loaded_full_names, &running, &can_use_cjk, home_nation);
+
 }
