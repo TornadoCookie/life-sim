@@ -1,5 +1,5 @@
 AC_PREREQ([2.71])
-AC_INIT([Life Simulator], [0.10], [helix.graziani@hotmail.com])
+AC_INIT([Life Simulator], [0.20], [helix.graziani@hotmail.com])
 
 AC_CONFIG_SRCDIR([include/school.hpp])
 AC_CONFIG_AUX_DIR([tools])
