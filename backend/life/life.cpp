@@ -57,7 +57,6 @@ void PlayerLife::StartRandomLife()
     else gender = Gender::Female;
 
     nation = nation_generator->GetRandomNation();
-    name_generator->SetHomeNation(nation);
 
     loading_screen_callback(1, 5);
     first_name = name_generator->GetRandomFirstName(nation, gender);
