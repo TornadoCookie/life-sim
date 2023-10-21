@@ -472,8 +472,3 @@ void NameGenerator::SetOfflineMode(bool offline)
 {
     offline_mode = offline;
 }
-
-void NameGenerator::SetHomeNation(Nation nation)
-{
-
-}

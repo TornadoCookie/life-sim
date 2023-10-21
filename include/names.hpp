@@ -25,7 +25,6 @@ class NameGenerator {
     std::string GetRandomFirstName(Nation nation, Gender gender);
     std::string GetRandomLastName(Nation nation, Gender gender);
     void SetCanUseCJK(bool can);
-    void SetHomeNation(Nation nation);
     void NameListFullRefresh();
     void SetOfflineMode(bool offline);
 
