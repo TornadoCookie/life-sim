@@ -59,6 +59,8 @@ class Interface {
     void ApplyForJob(int job_id);
     void RefreshJobList();
     bool IsDead();
+    void RefreshNameList();
+    void SetIsOffline(bool offline);
 };
 
 #endif /* _LIFE_INTERFACE_ */

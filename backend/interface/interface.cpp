@@ -193,3 +193,13 @@ bool Interface::IsDead()
 {
     return current_life->is_dead;
 }
+
+void Interface::RefreshNameList()
+{
+    name_generator->NameListFullRefresh();
+}
+
+void Interface::SetIsOffline(bool offline)
+{
+    name_generator->SetOfflineMode(offline);
+}
