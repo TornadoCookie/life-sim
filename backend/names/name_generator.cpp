@@ -343,22 +343,6 @@ std::string NameGenerator::get_random_full_name(Nation nation, Gender gender)
 
 struct stat statbuf;
 
-NameGenerator::NameGenerator(Nation nation)
-{
-    static bool there_is_another = false;
-    if (there_is_another)
-    {
-        throw new std::runtime_error("NameGenerator Mutex error");
-    }
-    there_is_another = true;
-    offline_mode = false;
-    InitNetwork();
-    can_use_cjk = true;
-    running = true;
-    if (stat(std::string("name_list.txt").c_str(), &statbuf)) NameListFullRefresh();
-    init_name_lists(&loaded_full_names);
-}
-
 NameGenerator::NameGenerator()
 {
     static bool there_is_another = false;

@@ -20,7 +20,6 @@ struct FullName {
 
 class NameGenerator {
     public:
-    NameGenerator(Nation home_nation);
     NameGenerator();
     ~NameGenerator();
     std::string GetRandomFirstName(Nation nation, Gender gender);
