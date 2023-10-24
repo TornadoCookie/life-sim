@@ -49,7 +49,7 @@ void PlayerLife::StartRandomLife()
 {
     int random_gender_number = rand(), acceptable_range;
     bool done = false;
-    UrgentLifeEvent *birth_event = new UrgentLifeEvent;
+    UrgentLifeEvent birth_event;
 
     is_dead = false;
 
@@ -92,13 +92,13 @@ void PlayerLife::StartRandomLife()
 
     stats = random_life_stats();
 
-    birth_event->default_option = 1;
-    birth_event->options = {"Okay"};
-    birth_event->title = "A New Life";
+    birth_event.default_option = 1;
+    birth_event.options = {"Okay"};
+    birth_event.title = "A New Life";
 
     std::string gender_str = gender == Gender::Male ? "male" : "female";
     std::string nation_the_str = nation.shouldHaveTheBefore  ? "the " : " ";
-    birth_event->content = string_format("You were born a %s, in%s%s.\n\nYou have been named %s %s.\n\nYou are %s.",
+    birth_event.content = string_format("You were born a %s, in%s%s.\n\nYou have been named %s %s.\n\nYou are %s.",
         gender_str.c_str(), nation_the_str.c_str(), nation.name.c_str(),
         first_name.c_str(), last_name.c_str(), nation.demonym.c_str());
     urgent_life_event_logger->PromptUrgentLifeEvent(birth_event);
@@ -147,11 +147,11 @@ void set_sexuality(PlayerLife *plr, Life *life, YearLogger *y_logger, UrgentLife
 {
     if (life == plr)
     {
-        UrgentLifeEvent *evt = new UrgentLifeEvent;
-        evt->title = "Feelings";
-        evt->content = "What is your sexuality?";
-        evt->options = {"Heterosexual"};
-        evt->default_option = 1;
+        UrgentLifeEvent evt;
+        evt.title = "Feelings";
+        evt.content = "What is your sexuality?";
+        evt.options = {"Heterosexual"};
+        evt.default_option = 1;
 
         int chosen = u_logger->PromptUrgentLifeEvent(evt);
         life->sexuality = (Sexuality)chosen;
@@ -228,39 +228,35 @@ bool set_lover(PlayerLife *plr, UrgentLifeEventLogger *u_logger, YearLogger *y_l
 
     std::string gender_str = lover->gender == Gender::Male ? "male" : "female";
 
-    UrgentLifeEvent *evt = new UrgentLifeEvent;
-    evt->title = "Love <3";
-    evt->content = string_format("You have met a %s called %s %s.\n\nAge: %d.\nNationality: %s.\n\nAppearance: %d.", 
+    UrgentLifeEvent evt;
+    evt.title = "Love <3";
+    evt.content = string_format("You have met a %s called %s %s.\n\nAge: %d.\nNationality: %s.\n\nAppearance: %d.", 
     gender_str.c_str(), lover->first_name.c_str(), lover->last_name.c_str(), lover->age, lover->nation.demonym.c_str(), lover->stats.appearance);
-    evt->options = {"Go For A Date", "Leave It"};
-    evt->default_option = 1;
+    evt.options = {"Go For A Date", "Leave It"};
+    evt.default_option = 1;
     int option = u_logger->PromptUrgentLifeEvent(evt);
-
-    delete evt;
 
     if (option == 2)
         return false;
 
     if (lover->stats.appearance > 50 && abs(plr->stats.appearance - lover->stats.appearance) > 20)
     {
-        UrgentLifeEvent *rejection_evt = new UrgentLifeEvent;
-        rejection_evt->title = "</3";
-        rejection_evt->content = string_format("You were rejected by %s.", lover->first_name.c_str());
-        rejection_evt->options = {"Okay"};
-        rejection_evt->default_option = 1;
+        UrgentLifeEvent rejection_evt;
+        rejection_evt.title = "</3";
+        rejection_evt.content = string_format("You were rejected by %s.", lover->first_name.c_str());
+        rejection_evt.options = {"Okay"};
+        rejection_evt.default_option = 1;
         u_logger->PromptUrgentLifeEvent(rejection_evt);
-        delete rejection_evt;
         y_logger->AddToThisYearLog(string_format("I was rejected by %s.\n", lover->first_name.c_str()));
         return false;
     }
 
-    UrgentLifeEvent *acceptance_evt = new UrgentLifeEvent;
-    acceptance_evt->title = "True love";
-    acceptance_evt->content = string_format("You are in a relationship with %s.", lover->first_name.c_str());
-    acceptance_evt->options = {"Okay"};
-    acceptance_evt->default_option = 1;
+    UrgentLifeEvent acceptance_evt;
+    acceptance_evt.title = "True love";
+    acceptance_evt.content = string_format("You are in a relationship with %s.", lover->first_name.c_str());
+    acceptance_evt.options = {"Okay"};
+    acceptance_evt.default_option = 1;
     u_logger->PromptUrgentLifeEvent(acceptance_evt);
-    delete acceptance_evt;
 
     y_logger->AddToThisYearLog(string_format("I'm now in a relationship with %s.\n", lover->first_name.c_str()));
 
