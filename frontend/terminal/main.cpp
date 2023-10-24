@@ -29,7 +29,7 @@ int handle_urgent_life_event(UrgentLifeEvent *urgent_life_event)
 
     for (i = 0; i < urgent_life_event->options.size(); i++)
     {
-        std::cout << "[" << ((urgent_life_event->default_option == i) ? "*" : " ");
+        std::cout << "[" << ((urgent_life_event->default_option == i+1) ? "*" : " ");
         std::cout << i+1 << "] " << urgent_life_event->options[i] << std::endl;
     }
     std::cout << "Your option: ";
