@@ -50,14 +50,26 @@ void draw_settings_menu(Interface *interface)
 
 }
 
+int loading_now, loading_left;
+bool loading;
+
+void loading_screen_callback(int now, int left)
+{
+    loading = now != left;
+    loading_now = now;
+    loading_left = left;
+}
+
 int main()
 {
     Interface *interface = new Interface;
     int menu_in;
+    float progress_bar_value;
 
     InitWindow(640, 480, PACKAGE_STRING);
 
     interface->SetCanUseCJK(false);
+    interface->RegisterLoadingScreenCallback(loading_screen_callback);
     interface->StartRandomLife();
 
     while (!WindowShouldClose())
@@ -90,6 +102,23 @@ int main()
             case 6:
             draw_settings_menu(interface);
             break;
+        }
+
+        if (loading && !GuiIsLocked())
+        {
+            GuiLock();
+        }
+        else if (!loading && GuiIsLocked())
+        {
+            GuiUnlock();
+        }
+
+        if (loading && progress_bar_value != loading_now * loading_left)
+        {
+            progress_bar_value = loading_now / loading_left;
+            DrawRectangle(0, 0, 640, 480, (Color){0, 0, 0, 128});
+            GuiWindowBox((Rectangle){280, 144, 216, 80}, "Loading...");
+            GuiProgressBar((Rectangle){288, 184, 200, 24}, NULL, NULL, &progress_bar_value, 1, loading_left);
         }
 
         EndDrawing();
