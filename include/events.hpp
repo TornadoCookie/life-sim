@@ -21,6 +21,7 @@ class YearLogger {
 
 class UrgentLifeEventLogger {
     public:
+    UrgentLifeEventLogger();
     int PromptUrgentLifeEvent(UrgentLifeEvent event);
     void RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent));
 

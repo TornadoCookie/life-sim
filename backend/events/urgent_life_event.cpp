@@ -16,3 +16,8 @@ void UrgentLifeEventLogger::RegisterUrgentLifeEventCallback(int(*callback)(Urgen
 {
     urgent_life_event_callback = callback;
 }
+
+UrgentLifeEventLogger::UrgentLifeEventLogger()
+{
+    urgent_life_event_callback = NULL;
+}
