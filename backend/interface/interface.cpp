@@ -23,7 +23,7 @@ std::string string_format( const std::string& format, Args ... args )
 Interface::Interface()
 {
     name_generator = new NameGenerator;
-    year_logger = new YearLogger;
+    year_logger = new YearLogger(0);
     urgent_life_event_logger = new UrgentLifeEventLogger;
     current_life = new PlayerLife(urgent_life_event_logger, year_logger);
 }
@@ -39,11 +39,9 @@ void Interface::StartRandomLife()
 
     /* Reset Year Logger */
     delete year_logger;
-    year_logger = new YearLogger;
 
     current_year = rand() % 80 + 1970;
-    year_logger->SetStartingYear(current_year);
-    year_logger->SetCurrentYear(current_year);
+    year_logger = new YearLogger(current_year);
 
     current_life->StartRandomLife();
 }
@@ -55,7 +53,7 @@ void Interface::AgeUp()
     current_life->AgeUp();
 }
 
-void Interface::RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent*))
+void Interface::RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent))
 {
     urgent_life_event_logger->RegisterUrgentLifeEventCallback(callback);
 }
@@ -163,22 +161,22 @@ void Interface::ApplyForJob(int job_id)
 {
     Job *job = current_life->employer->available_jobs[job_id];
     bool result = job->Apply();
-    UrgentLifeEvent *evt = new UrgentLifeEvent;
+    UrgentLifeEvent evt;
 
     if (result)
     {
-        evt->title = "Nice One";
+        evt.title = "Nice One";
         std::string a_an = is_vowel(job->industry.data()[0]) ? "n " : " ";
-        evt->content = string_format("You got the job as a%s%s %s at %s.", a_an.c_str(), job->industry.c_str(), job->title.c_str(), job->company.name.c_str());
-        evt->options = {"Okay"};
-        evt->default_option = 1;
+        evt.content = string_format("You got the job as a%s%s %s at %s.", a_an.c_str(), job->industry.c_str(), job->title.c_str(), job->company.name.c_str());
+        evt.options = {"Okay"};
+        evt.default_option = 1;
     }
     else
     {
-        evt->title = "Bad News";
-        evt->content = "You didn't get an interview.";
-        evt->options = {"Okay"};
-        evt->default_option = 1;
+        evt.title = "Bad News";
+        evt.content = "You didn't get an interview.";
+        evt.options = {"Okay"};
+        evt.default_option = 1;
     }
 
     urgent_life_event_logger->PromptUrgentLifeEvent(evt);

@@ -37,7 +37,7 @@ class Interface {
     void CallInterfaceFunction(int function, void *arg, void *result);
     void StartRandomLife();
     void AgeUp();
-    void RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent*));
+    void RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent));
     std::vector<YearLog> GetYearLog();
     int GetBirthYear();
     YearLog GetLatestYearLog();
