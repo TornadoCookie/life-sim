@@ -6,6 +6,7 @@
 
 class YearLogger {
     public:
+    YearLogger(int start);
     void SetStartingYear(int starting_year);
     void AddToYearLog(int year, std::string message);
     void AddToThisYearLog(std::string message);
@@ -20,11 +21,11 @@ class YearLogger {
 
 class UrgentLifeEventLogger {
     public:
-    int PromptUrgentLifeEvent(UrgentLifeEvent *event);
-    void RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent*));
+    int PromptUrgentLifeEvent(UrgentLifeEvent event);
+    void RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent));
 
     private:
-    int (*urgent_life_event_callback)(UrgentLifeEvent*);
+    int (*urgent_life_event_callback)(UrgentLifeEvent);
 };
 
 #endif /* _EVENTS_ */

@@ -36,3 +36,9 @@ void YearLogger::AddToThisYearLog(std::string message)
 {
     AddToYearLog(current_year, message);
 }
+
+YearLogger::YearLogger(int start)
+{
+    starting_year = start;
+    current_year = start;
+}
