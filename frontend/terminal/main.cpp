@@ -18,22 +18,22 @@ int get_input(int default_option, int max_option)
     return option;
 }
 
-int handle_urgent_life_event(UrgentLifeEvent *urgent_life_event)
+int handle_urgent_life_event(UrgentLifeEvent urgent_life_event)
 {
     unsigned long i;
     int option;
 
-    std::cout << "--" << urgent_life_event->title << "--" << std::endl;
-    std::cout << urgent_life_event->content << std::endl;
+    std::cout << "--" << urgent_life_event.title << "--" << std::endl;
+    std::cout << urgent_life_event.content << std::endl;
     std::cout << "Your options: " << std::endl;
 
-    for (i = 0; i < urgent_life_event->options.size(); i++)
+    for (i = 0; i < urgent_life_event.options.size(); i++)
     {
-        std::cout << "[" << ((urgent_life_event->default_option == i+1) ? "*" : " ");
-        std::cout << i+1 << "] " << urgent_life_event->options[i] << std::endl;
+        std::cout << "[" << ((urgent_life_event.default_option == i+1) ? "*" : " ");
+        std::cout << i+1 << "] " << urgent_life_event.options[i] << std::endl;
     }
     std::cout << "Your option: ";
-    option = get_input(urgent_life_event->default_option, urgent_life_event->options.size());
+    option = get_input(urgent_life_event.default_option, urgent_life_event.options.size());
     return option;
 }
 
