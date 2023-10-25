@@ -337,7 +337,7 @@ std::string NameGenerator::get_random_full_name(Nation nation, Gender gender)
             return ret;
         }
     }
-    std::cout << "somehow did not find a name" << std::endl;
+    std::cerr << "warning: No name found in offline storage. Refresh name list with -r to fix." << std::endl;
     return get_random_full_name_network(nation, gender, can_use_cjk);
 }
 
