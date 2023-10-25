@@ -51,7 +51,7 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 
 std::string placeholder_name(Nation nation, Gender gender, CURLcode code)
 {
-    std::cout << "Got unexpected CURLcode " << std::string(curl_easy_strerror(code)) << ", using default names" << std::endl;
+    if (code != CURLE_OPERATION_TIMEDOUT && code != CURLE_COULDNT_RESOLVE_HOST) std::cout << "Got unexpected CURLcode " << std::string(curl_easy_strerror(code)) << ", using default names" << std::endl;
     return gender == Gender::Male ? "John Doe" : "Jane Doe";
 }
 
