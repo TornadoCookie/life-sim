@@ -236,7 +236,7 @@ void init_name_lists(std::vector<FullName> *list)
     std::vector<Nation> nation_list = n_generator.GetNationList();
     std::ifstream name_list_file_fd;
     Nation current_nation;
-    Gender current_gender;
+    Gender current_gender = Gender::Male;
     bool is_in_last_names = false;
     std::string token, line;
 
@@ -253,7 +253,7 @@ void init_name_lists(std::vector<FullName> *list)
         if (token == "nation")
         {
             name_list_file >> token;
-            for (int i = 0; i < nation_list.size(); i++)
+            for (unsigned long i = 0; i < nation_list.size(); i++)
                 if (nation_list[i].api_name == token)
                     current_nation = nation_list[i];
         }
@@ -289,12 +289,12 @@ void init_name_lists(std::vector<FullName> *list)
 
     std::cout << "Building name tree..." << std::endl;
 
-    for (int i = 0; i < nation_list.size(); i++)
+    for (unsigned long i = 0; i < nation_list.size(); i++)
     {
         Nation nation = nation_list[i];
-        for (int j = 0; j < male_first_names[nation.api_name].size(); j++)
+        for (unsigned long j = 0; j < male_first_names[nation.api_name].size(); j++)
         {
-            for (int k = 0; k < last_names[nation.api_name].size(); k++)
+            for (unsigned long k = 0; k < last_names[nation.api_name].size(); k++)
             {
                 FullName new_full_name;
                 new_full_name.gender = Gender::Male;
@@ -305,9 +305,9 @@ void init_name_lists(std::vector<FullName> *list)
                 list->push_back(new_full_name);
             }
         }
-        for (int j = 0; j < female_first_names[nation.api_name].size(); j++)
+        for (unsigned long j = 0; j < female_first_names[nation.api_name].size(); j++)
         {
-            for (int k = 0; k < last_names[nation.api_name].size(); k++)
+            for (unsigned long k = 0; k < last_names[nation.api_name].size(); k++)
             {
                 FullName new_full_name;
                 new_full_name.gender = Gender::Female;
@@ -343,7 +343,7 @@ std::string NameGenerator::get_random_full_name(Nation nation, Gender gender)
         {
             std::string ret = loaded_full_names[i].name;
             if (!offline_mode)
-                std::thread *t = new std::thread(regen_name, &loaded_full_names, can_use_cjk, i);
+                new std::thread(regen_name, &loaded_full_names, can_use_cjk, i);
             return ret;
         }
     }
@@ -428,7 +428,7 @@ void NameGenerator::NameListFullRefresh()
 
     name_list_file.open("name_list.txt");
 
-    for (int i = 14; i < nation_list.size(); i++)
+    for (unsigned long i = 0; i < nation_list.size(); i++)
     {
         std::cout << "nation " << i << " / " << nation_list.size() << std::endl;
         Nation nation = nation_list[i];
@@ -455,19 +455,19 @@ void NameGenerator::NameListFullRefresh()
         }
 
         name_list_file << "gender male\n";
-        for (int j = 0; j < male_names.size(); j++)
+        for (unsigned long j = 0; j < male_names.size(); j++)
         {
             name_list_file << male_names[j] << "\n";
         }
 
         name_list_file << "gender female\n";
-        for (int j = 0; j < female_names.size(); j++)
+        for (unsigned long j = 0; j < female_names.size(); j++)
         {
             name_list_file << female_names[j] << "\n";
         }
 
         name_list_file << "last names\n";
-        for (int j = 0; j < female_names.size() + male_names.size(); j++)
+        for (unsigned long j = 0; j < female_names.size() + male_names.size(); j++)
         {
             name_list_file << last_names[j] << "\n";
         }
