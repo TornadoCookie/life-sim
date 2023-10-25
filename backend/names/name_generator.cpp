@@ -125,6 +125,11 @@ std::string romanize_text(std::string romanize, Nation nation)
 
         /* Get our data from the response */
         char *romanized_str = strstr(chunk.memory, "</rt></ruby></td><td>") + 22;
+        if (!romanized_str || std::string(romanized_str) == "Invalid JSON input")
+        {
+            std::cerr << "Got invalid response from romanization server. Check curl.log." << std::endl;
+            return romanize_error(romanize, CURLE_OK);
+        }
         if (!(*romanized_str)) romanized_str++;
         *strchr(romanized_str, '<') = 0;
 
@@ -194,6 +199,11 @@ std::string get_random_full_name_network(Nation nation, Gender gender, bool use_
     char *first_name, *last_name, *full_name;
 
     char *fn_start = strstr(chunk.memory, "<div class=\"box-name\">") + 25;
+    if (fn_start == (char *)25)
+    {
+        std::cerr << "Got invalid response from name generation server. Check curl.log." << std::endl;
+        return placeholder_name(nation, gender, CURLE_OK);
+    }
 
     for (first_name = fn_start; first_name < chunk.memory + chunk.size; first_name++)
         if (*first_name != 0x20) break;
@@ -418,7 +428,7 @@ void NameGenerator::NameListFullRefresh()
 
     name_list_file.open("name_list.txt");
 
-    for (int i = 0; i < nation_list.size(); i++)
+    for (int i = 14; i < nation_list.size(); i++)
     {
         std::cout << "nation " << i << " / " << nation_list.size() << std::endl;
         Nation nation = nation_list[i];
