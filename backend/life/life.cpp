@@ -123,6 +123,8 @@ void PlayerLife::StartRandomLife()
     if (stats.musical > 60) add_potential("A musician", &done, year_logger);
     if (stats.painting > 60) add_potential("An artist", &done, year_logger);
     if (stats.social > 60) add_potential("A social media influencer", &done, year_logger);
+
+    chance_of_dying = 0;
 }
 
 std::string get_relation_to_player(Life *life, PlayerLife *plr)
