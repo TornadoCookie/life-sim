@@ -319,7 +319,7 @@ void regen_name(std::vector<FullName> *list, bool use_unicode, int i) {
     new_name.gender = list->at(i).gender;
     new_name.nation = list->at(i).nation;
     new_name.name = get_random_full_name_network(new_name.nation, new_name.gender, use_unicode);
-    list->at(i) = new_name;
+    if (new_name.name != "John Doe") list->at(i) = new_name;
     delete nation_generator;
 }
 
