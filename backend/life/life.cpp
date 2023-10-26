@@ -1,6 +1,7 @@
 #include "life.hpp"
 #include <iostream>
 #include <memory>
+#include <cmath>
 
 PlayerLife::PlayerLife(UrgentLifeEventLogger *u_logger, YearLogger *y_logger)
 {
@@ -123,8 +124,6 @@ void PlayerLife::StartRandomLife()
     if (stats.musical > 60) add_potential("A musician", &done, year_logger);
     if (stats.painting > 60) add_potential("An artist", &done, year_logger);
     if (stats.social > 60) add_potential("A social media influencer", &done, year_logger);
-
-    chance_of_dying = 0;
 }
 
 std::string get_relation_to_player(Life *life, PlayerLife *plr)
@@ -169,6 +168,45 @@ void set_sexuality(PlayerLife *plr, Life *life, YearLogger *y_logger, UrgentLife
     }
 }
 
+/* Real chances from http://www.bandolier.org.uk/booth/Risk/dyingage.html */
+float get_chance_of_death(int age, Gender gender)
+{
+    if (gender == Gender::Male)
+    {
+        if (age > 85) return 1.0f/6;
+        if (age > 75) return 1.0f/15;
+        if (age > 65) return 1.0f/42;
+        if (age > 55) return 1.0f/112;
+        if (age > 45) return 1.0f/279;
+        if (age > 35) return 1.0f/663;
+        if (age > 25) return 1.0f/1215;
+        if (age > 15) return 1.0f/1908;
+        if (age >  5) return 1.0f/8333;
+        if (age >  1) return 1.0f/4386;
+        return 1.0f/177;
+    }
+    else
+    {
+        if (age > 85) return 1.0f/7;
+        if (age > 75) return 1.0f/21;
+        if (age > 65) return 1.0f/65;
+        if (age > 55) return 1.0f/178;
+        if (age > 45) return 1.0f/421;
+        if (age > 35) return 1.0f/1106;
+        if (age > 25) return 1.0f/2488;
+        if (age > 15) return 1.0f/4132;
+        if (age >  5) return 1.0f/10417;
+        if (age >  1) return 1.0f/227;
+        return 1/193;
+    }
+    return 1.0f;
+}
+
+bool should_die(Life *life)
+{
+    return rand() % 100 < get_chance_of_death(life->age, life->gender) * 100;
+}
+
 void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger, UrgentLifeEventLogger *u_logger)
 {
     if (life->is_dead) return;
@@ -192,9 +230,7 @@ void age_up_life(PlayerLife *plr, Life *life, YearLogger *y_logger, UrgentLifeEv
             set_sexuality(plr, life, y_logger, u_logger);
     }
 
-    if (life->age > 65)
-        life->chance_of_dying++;
-    if (rand() % 100 < life->chance_of_dying)
+    if (should_die(life))
     {
         if (life == plr)
             plr->Die(CauseOfDeath::NaturalCauses);

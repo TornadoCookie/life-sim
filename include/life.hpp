@@ -51,7 +51,6 @@ class Life {
     Nation nation;
     int age;
     Gender gender;
-    float chance_of_dying;
     bool is_dead;
     LifeStats stats;
     LifeFinance finance;
