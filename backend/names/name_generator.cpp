@@ -84,6 +84,9 @@ CURLcode make_request(std::string url, std::string post_data, struct MemoryStruc
     res = curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
     if (res) return res;
 
+    res = curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
+    if (res) return res;
+
     if (is_json)
     {
         headers = curl_slist_append(headers, "Content-Type: application/json");
@@ -414,6 +417,47 @@ std::string NameGenerator::GetRandomLastName(Nation nation, Gender gender)
 
 const int names_per_gender_per_nation = 5;
 
+void name_list_full_refresh_nation(Nation nation, std::vector<std::string> *contents_to_write, const int i, bool can_use_cjk)
+{
+    std::stringstream name_list_file;
+    name_list_file << "nation " << nation.api_name << "\n";
+
+    std::vector<std::string> male_names, female_names, last_names;
+
+    /* We can use .reserve() here because we do not expect the size of the vector to change */
+    male_names.reserve(names_per_gender_per_nation);
+    female_names.reserve(names_per_gender_per_nation);
+    last_names.reserve(names_per_gender_per_nation * 2);
+
+    for (int j = 0; j < names_per_gender_per_nation; j++)
+    {
+        std::cout << "name  " << j << " / " << names_per_gender_per_nation << std::endl;
+        std::string male_name = get_random_full_name_network(nation, Gender::Male, can_use_cjk);
+        std::string female_name = get_random_full_name_network(nation, Gender::Female, can_use_cjk);
+        male_names.push_back(male_name.substr(0, male_name.find(' ')));
+        female_names.push_back(female_name.substr(0, female_name.find(' ')));
+        last_names.push_back(std::string(strchr(male_name.c_str(), ' ') + 1));
+        last_names.push_back(std::string(strchr(female_name.c_str(), ' ') + 1));
+    }
+    name_list_file << "gender male\n";
+    for (unsigned long j = 0; j < male_names.size(); j++)
+    {
+        name_list_file << male_names[j] << "\n";
+    }
+    name_list_file << "gender female\n";
+    for (unsigned long j = 0; j < female_names.size(); j++)
+    {
+        name_list_file << female_names[j] << "\n";
+    }
+    name_list_file << "last names\n";
+    for (unsigned long j = 0; j < female_names.size() + male_names.size(); j++)
+    {
+        name_list_file << last_names[j] << "\n";
+    }
+    name_list_file.flush();
+    (*contents_to_write)[i] = name_list_file.str();
+}
+
 void NameGenerator::NameListFullRefresh()
 {
     std::ofstream name_list_file;
@@ -426,56 +470,34 @@ void NameGenerator::NameListFullRefresh()
         return;
     }
 
-    name_list_file.open("name_list.txt");
+    std::vector<std::string> contents_to_write;
+    std::vector<std::thread> nation_threads;
+
+    contents_to_write.resize(nation_list.size());
 
     for (unsigned long i = 0; i < nation_list.size(); i++)
     {
         std::cout << "nation " << i << " / " << nation_list.size() << std::endl;
-        Nation nation = nation_list[i];
-        name_list_file << "nation " << nation.api_name << "\n";
-
-        std::vector<std::string> male_names, female_names, last_names;
-
-        /* We can use .reserve() here because we do not expect the size of the vector to change */
-        male_names.reserve(names_per_gender_per_nation);
-        female_names.reserve(names_per_gender_per_nation);
-        last_names.reserve(names_per_gender_per_nation * 2);
-
-        for (int j = 0; j < names_per_gender_per_nation; j++)
-        {
-            std::cout << "name  " << j << " / " << names_per_gender_per_nation << std::endl;
-            std::string male_name = get_random_full_name_network(nation, Gender::Male, can_use_cjk);
-            std::string female_name = get_random_full_name_network(nation, Gender::Female, can_use_cjk);
-
-            male_names.push_back(male_name.substr(0, male_name.find(' ')));
-            female_names.push_back(female_name.substr(0, female_name.find(' ')));
-
-            last_names.push_back(std::string(strchr(male_name.c_str(), ' ') + 1));
-            last_names.push_back(std::string(strchr(female_name.c_str(), ' ') + 1));
-        }
-
-        name_list_file << "gender male\n";
-        for (unsigned long j = 0; j < male_names.size(); j++)
-        {
-            name_list_file << male_names[j] << "\n";
-        }
-
-        name_list_file << "gender female\n";
-        for (unsigned long j = 0; j < female_names.size(); j++)
-        {
-            name_list_file << female_names[j] << "\n";
-        }
-
-        name_list_file << "last names\n";
-        for (unsigned long j = 0; j < female_names.size() + male_names.size(); j++)
-        {
-            name_list_file << last_names[j] << "\n";
-        }
-
-        name_list_file.flush();
+        nation_threads.push_back(std::thread(name_list_full_refresh_nation, nation_list[i], &contents_to_write, i, can_use_cjk));
     }
 
+    for (unsigned long i = 0; i < nation_threads.size(); i++)
+    {
+        nation_threads[i].join();
+    }
+
+    name_list_file.open("name_list.txt");
+
+    for (unsigned long i = 0; i < contents_to_write.size(); i++)
+    {
+        std::cout << contents_to_write[i];
+        name_list_file << contents_to_write[i];
+    }
+
+    name_list_file.flush();
     name_list_file.close();
+
+    init_name_lists(&loaded_full_names);
 }
 
 void NameGenerator::SetOfflineMode(bool offline)
