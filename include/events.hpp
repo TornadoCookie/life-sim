@@ -11,6 +11,7 @@ class YearLogger {
     void AddToYearLog(int year, std::string message);
     void AddToThisYearLog(std::string message);
     void SetCurrentYear(int year);
+    void Reset(int year);
     
     std::vector<YearLog> log;
 

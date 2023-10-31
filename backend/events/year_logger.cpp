@@ -42,3 +42,9 @@ YearLogger::YearLogger(int start)
     starting_year = start;
     current_year = start;
 }
+
+void YearLogger::Reset(int year)
+{
+    starting_year = year;
+    current_year = year;
+}
