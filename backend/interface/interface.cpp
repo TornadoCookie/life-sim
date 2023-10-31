@@ -37,11 +37,8 @@ void Interface::StartRandomLife()
 {
     srand(time(NULL));
 
-    /* Reset Year Logger */
-    delete year_logger;
-
     current_year = rand() % 80 + 1970;
-    year_logger = new YearLogger(current_year);
+    year_logger->Reset(current_year);
 
     current_life->StartRandomLife();
 }
