@@ -53,6 +53,8 @@ void PlayerLife::StartRandomLife()
     UrgentLifeEvent birth_event;
 
     is_dead = false;
+    sexuality = Sexuality::NotChosen;
+    lover = NULL;
 
     if (random_gender_number & 1) gender = Gender::Male;
     else gender = Gender::Female;
@@ -73,6 +75,8 @@ void PlayerLife::StartRandomLife()
     mother->nation = nation;
     mother->age = rand() % 35 + 15; /* In range 15-50 */
     mother->sexuality = Sexuality::Heterosexual;
+    mother->is_dead = false;
+    mother->gender = Gender::Female;
 
     loading_screen_callback(4, 5);
     father = new Life;
@@ -80,6 +84,8 @@ void PlayerLife::StartRandomLife()
     father->last_name = last_name;
     father->nation = nation;
     father->sexuality = Sexuality::Heterosexual;
+    father->is_dead = false;
+    father->gender = Gender::Male;
 
     loading_screen_callback(5, 5);
     if (mother->age <= 20) acceptable_range = 1;
