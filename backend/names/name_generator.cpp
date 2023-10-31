@@ -127,10 +127,11 @@ std::string romanize_text(std::string romanize, Nation nation)
         fclose(f);
 
         /* Get our data from the response */
-        char *romanized_str = strstr(chunk.memory, "</rt></ruby></td><td>") + 22;
-        if (!romanized_str || std::string(romanized_str) == "Invalid JSON input")
+        char *romanized_str = strstr(chunk.memory, "</td><td>") + 9;
+        if (romanized_str == (char*)9 || std::string(romanized_str) == "Invalid JSON input")
         {
             std::cerr << "Got invalid response from romanization server. Check curl.log." << std::endl;
+            exit(EXIT_FAILURE);
             return romanize_error(romanize, CURLE_OK);
         }
         if (!(*romanized_str)) romanized_str++;
