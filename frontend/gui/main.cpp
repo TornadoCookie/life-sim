@@ -17,7 +17,7 @@ void draw_lifelog_menu(Interface *interface)
     GuiScrollPanel((Rectangle){24, 48, 464 - ScrollPanelBoundsOffset.x, 248 - ScrollPanelBoundsOffset.y}, std::string("Life Log").c_str(), (Rectangle){24, 48, 464, 248}, &ScrollPanelScrollOffset, &ScrollPanelScrollView);
 
     if (GuiButton((Rectangle){24, 296, 464, 24}, std::string("Age Up").c_str()))
-        interface->AgeUp();
+        interface->life.AgeUp();
 }
 
 void draw_education_menu(Interface *interface)
@@ -70,7 +70,7 @@ int main()
 
     interface->SetCanUseCJK(false);
     interface->RegisterLoadingScreenCallback(loading_screen_callback);
-    interface->StartRandomLife();
+    interface->life.StartRandomLife();
 
     while (!WindowShouldClose())
     {
