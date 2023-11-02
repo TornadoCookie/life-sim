@@ -39,13 +39,13 @@ int handle_urgent_life_event(UrgentLifeEvent urgent_life_event)
 
 void print_year_log(Interface *interface, YearLog log)
 {
-    std::cout << interface->GetAgeAtYear(log.year) << " Years Old - " << log.year << std::endl;
+    std::cout << interface->life.GetAgeAtYear(log.year) << " Years Old - " << log.year << std::endl;
     std::cout << log.content << std::endl;
 }
 
 void show_full_life_log(Interface *interface)
 {
-    std::vector<YearLog> full_year_log = interface->GetYearLog();
+    std::vector<YearLog> full_year_log = interface->events.GetYearLog();
     unsigned long i;
 
     for (i = 0; i < full_year_log.size(); i++)
@@ -59,14 +59,14 @@ void cv_menu(Interface *interface)
     while (1)
     {
         std::cout << "Your CV:" << std::endl;
-        std::cout << interface->GetCV() << std::endl;
-        std::cout << interface->GetCVBlurb() << std::endl;
+        std::cout << interface->education.GetCV() << std::endl;
+        std::cout << interface->education.GetCVBlurb() << std::endl;
 
         std::cout << "Your options: " << std::endl;
-        std::cout << "[" << (interface->GetEducationLevel() != EducationLevel::Uneducated ? " " : "X") << "1] Drop out of school";
+        std::cout << "[" << (interface->education.GetEducationLevel() != EducationLevel::Uneducated ? " " : "X") << "1] Drop out of school";
         std::cout << std::endl;
         std::cout << "[X2] Educational development" << std::endl;
-        std::cout << "[" << (interface->CanGoBackToUniversity() ? " " : "X") << "3] Go back to";
+        std::cout << "[" << (interface->education.CanGoBackToUniversity() ? " " : "X") << "3] Go back to";
         std::cout << " university" << std::endl;
         std::cout << "[*4] Main menu" << std::endl;
 
@@ -74,10 +74,10 @@ void cv_menu(Interface *interface)
         switch(get_input(4, 4))
         {
             case 1:
-            interface->Dropout();
+            interface->education.Dropout();
             break;
             case 3:
-            interface->GoBackToUni();
+            interface->education.GoBackToUni();
             break;
             case 4:
             return;
@@ -105,13 +105,13 @@ void selected_job(Interface *interface, int job_id)
         switch(get_input(4, 4))
         {
             case 1:
-            std::cout << "Requirements: " << interface->GetJobRequirements(job_id) << std::endl;
+            std::cout << "Requirements: " << interface->jobs.GetJobRequirements(job_id) << std::endl;
             break;
             case 2:
-            std::cout << interface->GetCompanyDetails(job_id) << std::endl;
+            std::cout << interface->jobs.GetCompanyDetails(job_id) << std::endl;
             break;
             case 3:
-            interface->ApplyForJob(job_id);
+            interface->jobs.ApplyForJob(job_id);
             break;
             case 4:
             return;
@@ -125,7 +125,7 @@ void available_job_menu(Interface *interface)
     if (!refreshed)
     {
         std::cout << "Refreshing Job List..." << std::endl;
-        interface->RefreshJobList();
+        interface->jobs.RefreshJobList();
         refreshed = true;
     }
 
@@ -133,9 +133,9 @@ void available_job_menu(Interface *interface)
     {
         std::cout << "Here are the available jobs:" << std::endl;
 
-        for (int i = 0; i < interface->GetJobListSize(); i++)
+        for (int i = 0; i < interface->jobs.GetJobListSize(); i++)
         {
-            std::cout << i+1 << ": " << interface->GetJobTitle(i) << " ($" << interface->GetJobPay(i) << ")" << std::endl;
+            std::cout << i+1 << ": " << interface->jobs.GetJobTitle(i) << " ($" << interface->jobs.GetJobPay(i) << ")" << std::endl;
         }
 
         std::cout << "Your options: " << std::endl;
@@ -148,9 +148,9 @@ void available_job_menu(Interface *interface)
         {
             case 1:
             std::cout << "What job would you like to select? ";
-            selected_job(interface, get_input(-1, interface->GetJobListSize())-1);
+            selected_job(interface, get_input(-1, interface->jobs.GetJobListSize())-1);
             case 2:
-            interface->RefreshJobList();
+            interface->jobs.RefreshJobList();
             break;
             case 3:
             return;
@@ -217,7 +217,7 @@ void handle_main_menu_option(Interface *interface, int option, bool *aged_up)
     switch (option)
     {
         case 1:
-            interface->AgeUp();
+            interface->life.AgeUp();
             *aged_up = true;
         break;
         case 2:
@@ -280,17 +280,17 @@ void start_over(Interface *interface)
     YearLog log;
     int option;
 
-    interface->StartRandomLife();
+    interface->life.StartRandomLife();
 
     while (1)
     {
         if (aged_up)
         {
-            log = interface->GetLatestYearLog();
+            log = interface->events.GetLatestYearLog();
             print_year_log(interface, log);
         }
 
-        if (interface->IsDead())
+        if (interface->life.IsDead())
             dead_menu(interface);
 
         std::cout << "Your options:" << std::endl;
@@ -373,7 +373,7 @@ int main(int argc, char **argv)
 
     interface->SetIsOffline(is_offline);
     interface->SetCanUseCJK(false);
-    interface->RegisterUrgentLifeEventCallback(handle_urgent_life_event);
+    interface->events.RegisterUrgentLifeEventCallback(handle_urgent_life_event);
     interface->RegisterLoadingScreenCallback(handle_loading_screen);
 
     if (regenerate_names)
