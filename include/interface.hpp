@@ -30,27 +30,43 @@ class YearLog {
     std::string content;
 };
 
-/* Main interface class between frontend and backend */
-class Interface {
+class Interface_Events {
     public:
-    Interface();
-    void CallInterfaceFunction(int function, void *arg, void *result);
-    void StartRandomLife();
-    void AgeUp();
+    Interface_Events();
+    Interface_Events(void *reserved);
     void RegisterUrgentLifeEventCallback(int(*callback)(UrgentLifeEvent));
     std::vector<YearLog> GetYearLog();
-    int GetBirthYear();
     YearLog GetLatestYearLog();
+};
+
+class Interface_Life {
+    public:
+    Interface_Life();
+    Interface_Life(void *reserved);
+    void StartRandomLife();
+    void AgeUp();
+    int GetBirthYear();
+    int GetAge();
+    int GetAgeAtYear(int year);
+    bool IsDead();
+};
+
+class Interface_Education {
+    public:
+    Interface_Education();
+    Interface_Education(void *reserved);
     std::string GetCV();
     std::string GetCVBlurb();
     EducationLevel GetEducationLevel();
     bool CanGoBackToUniversity();
     void Dropout();
     void GoBackToUni();
-    int GetAge();
-    int GetAgeAtYear(int year);
-    void RegisterLoadingScreenCallback(void(*callback)(int,int));
-    void SetCanUseCJK(bool can);
+};
+
+class Interface_Jobs {
+    public:
+    Interface_Jobs();
+    Interface_Jobs(void *reserved);
     int GetJobListSize();
     std::string GetJobTitle(int job_id);
     int GetJobPay(int job_id);
@@ -58,9 +74,24 @@ class Interface {
     std::string GetCompanyDetails(int job_id);
     void ApplyForJob(int job_id);
     void RefreshJobList();
-    bool IsDead();
+};
+
+/* Main interface class between frontend and backend */
+class Interface {
+    public:
+    Interface();
+    Interface_Events events;
+    Interface_Life life;
+    Interface_Education education;
+    Interface_Jobs jobs;
+
+    void RegisterLoadingScreenCallback(void(*callback)(int,int));
+    void SetCanUseCJK(bool can);
     void RefreshNameList();
     void SetIsOffline(bool offline);
+
+    private:
+    void *reserved;
 };
 
 #endif /* _LIFE_INTERFACE_ */

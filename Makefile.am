@@ -37,6 +37,10 @@ liblife_a_SOURCES = \
     $(srcdir)/backend/events/urgent_life_event.cpp \
     $(srcdir)/backend/events/year_logger.cpp \
     $(srcdir)/backend/interface/interface.cpp \
+    $(srcdir)/backend/interface/education.cpp \
+    $(srcdir)/backend/interface/events.cpp \
+    $(srcdir)/backend/interface/jobs.cpp \
+    $(srcdir)/backend/interface/life.cpp \
     $(srcdir)/backend/life/life.cpp \
     $(srcdir)/backend/names/name_generator.cpp \
     $(srcdir)/backend/nations/nation_generator.cpp \
