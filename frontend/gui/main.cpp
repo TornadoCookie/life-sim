@@ -22,7 +22,11 @@ void draw_lifelog_menu(Interface *interface)
 
 void draw_education_menu(Interface *interface)
 {
+    tatic Rectangle ScrollPanelScrollView = {};
+    static Vector2 ScrollPanelScrollOffset = {};
+    static Vector2 ScrollPanelBoundsOffset = {};
 
+    GuiScrollPanel((Rectangle){24, 48, 464 - ScrollPanelBoundsOffset.x, 248 - ScrollPanelBoundsOffset.y}, std::string("CV").c_str(), (Rectangle){24, 48, 464, 248}, &ScrollPanelScrollOffset, &ScrollPanelScrollView);
 }
 
 void draw_career_menu(Interface *interface)
