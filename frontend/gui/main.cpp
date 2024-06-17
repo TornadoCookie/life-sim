@@ -22,7 +22,7 @@ void draw_lifelog_menu(Interface *interface)
 
 void draw_education_menu(Interface *interface)
 {
-    tatic Rectangle ScrollPanelScrollView = {};
+    static Rectangle ScrollPanelScrollView = {};
     static Vector2 ScrollPanelScrollOffset = {};
     static Vector2 ScrollPanelBoundsOffset = {};
 
